@@ -28,27 +28,27 @@ public struct Note {
     // MARK: - Initialization
 
     public init(index: Int) throws {
-        self.index = index
-        letter = try NoteCalculator.letter(forIndex: index)
-        octave = try NoteCalculator.octave(forIndex: index)
-        frequency = try NoteCalculator.frequency(forIndex: index)
-        wave = try AcousticWave(frequency: frequency)
+        self.index     = index
+        letter         = try NoteCalculator.letter(forIndex: index)
+        octave         = try NoteCalculator.octave(forIndex: index)
+        frequency      = try NoteCalculator.frequency(forIndex: index)
+        wave           = try AcousticWave(frequency: frequency)
     }
 
     public init(frequency: Double) throws {
-        index = try NoteCalculator.index(forFrequency: frequency)
-        letter = try NoteCalculator.letter(forIndex: index)
-        octave = try NoteCalculator.octave(forIndex: index)
+        index          = try NoteCalculator.index(forFrequency: frequency)
+        letter         = try NoteCalculator.letter(forIndex: index)
+        octave         = try NoteCalculator.octave(forIndex: index)
         self.frequency = try NoteCalculator.frequency(forIndex: index)
-        wave = try AcousticWave(frequency: frequency)
+        wave           = try AcousticWave(frequency: frequency)
     }
 
     public init(letter: Letter, octave: Int) throws {
-        self.letter = letter
-        self.octave = octave
-        index = try NoteCalculator.index(forLetter: letter, octave: octave)
-        frequency = try NoteCalculator.frequency(forIndex: index)
-        wave = try AcousticWave(frequency: frequency)
+        self.letter    = letter
+        self.octave    = octave
+        index          = try NoteCalculator.index(forLetter: letter, octave: octave)
+        frequency      = try NoteCalculator.frequency(forIndex: index)
+        wave           = try AcousticWave(frequency: frequency)
     }
 
     // MARK: - Closest Notes
