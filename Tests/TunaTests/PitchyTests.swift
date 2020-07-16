@@ -126,6 +126,70 @@ final class PitchyTests: XCTestCase {
         }
     }
 
+    func testWaveCalculator() {
+        let waves = [
+            (frequency: 440.0,
+             wavelength: 0.7795,
+             period: 0.00227259
+            ),
+            (frequency: 1000.0,
+             wavelength: 0.343,
+             period: 0.001
+            )
+        ]
+
+        func indexBounds() {
+            // Bounds based on min and max frequencies from the config
+            let minimum = try! WaveCalculator.wavelength(forFrequency: FrequencyValidator.maximumFrequency)
+            let maximum = try! WaveCalculator.wavelength(forFrequency: FrequencyValidator.minimumFrequency)
+            let expected = (minimum: minimum, maximum: maximum)
+            let result = WaveCalculator.wavelengthBounds
+
+            XCTAssertEqual(result.minimum, expected.minimum)
+            XCTAssertEqual(result.maximum, expected.maximum)
+        }
+
+        indexBounds()
+
+        func octaveBounds() {
+            // Bounds based on min and max frequencies from the config
+            let bounds = WaveCalculator.wavelengthBounds
+            let minimum = try! WaveCalculator.period(forWavelength: bounds.minimum)
+            let maximum = try! WaveCalculator.period(forWavelength: bounds.maximum)
+            let expected = (minimum: minimum, maximum: maximum)
+            let result = WaveCalculator.periodBounds
+
+            XCTAssertEqual(result.minimum, expected.minimum)
+            XCTAssertEqual(result.maximum, expected.maximum)
+        }
+
+        octaveBounds()
+
+        // Valid wavelength
+        XCTAssertFalse(WaveCalculator.isValid(wavelength: 1_000), "is invalid if value is higher than maximum")
+        XCTAssertFalse(WaveCalculator.isValid(wavelength:  0.01), "is invalid if value is lower than minimum")
+        XCTAssertFalse(WaveCalculator.isValid(wavelength:  0), "is invalid if value is zero")
+        XCTAssertTrue(WaveCalculator.isValid(wavelength: 16), "is valid if value is within valid bounds")
+
+        // Valid period
+        XCTAssertFalse(WaveCalculator.isValid(period: 10), "is invalid if value is higher than maximum")
+        XCTAssertFalse(WaveCalculator.isValid(period: 0.0001), "is invalid if value is lower than minimum")
+        XCTAssertFalse(WaveCalculator.isValid(period:  0), "is invalid if value is zero")
+        XCTAssertTrue(WaveCalculator.isValid(period: 0.02), "is valid if value is within valid bounds")
+
+        for wave in waves {
+            let result1 = try! WaveCalculator.frequency(forWavelength: wave.wavelength)
+            XCTAssertTrue(result1 ≈ (wave.frequency, 0.1))
+            let result2 = try! WaveCalculator.wavelength(forFrequency: wave.frequency)
+            XCTAssertTrue(result2 ≈ (wave.wavelength, 0.1))
+            let result3 = try! WaveCalculator.wavelength(forPeriod: wave.period)
+            XCTAssertTrue(result3 ≈ (wave.wavelength, 0.0001))
+            let result4 = try! WaveCalculator.period(forWavelength: wave.wavelength)
+            XCTAssertTrue(result4 ≈ (wave.period, 0.0001))
+
+        }
+    }
+
     static var allTests = [
         ("testFrequencyValidator", testFrequencyValidator),
     ]
