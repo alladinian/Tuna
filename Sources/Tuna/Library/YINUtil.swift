@@ -32,11 +32,11 @@ final class YINUtil {
     // Instruments shows roughly around 22% CPU usage, compared to 95% for difference2
     class func differenceA(buffer: [Float]) -> [Float] {
         let bufferHalfCount = buffer.count / 2
-        var resultBuffer = [Float](repeating:0.0, count:bufferHalfCount)
-        var tempBuffer = [Float](repeating:0.0, count:bufferHalfCount)
-        var tempBufferSq = [Float](repeating:0.0, count:bufferHalfCount)
-        let len = vDSP_Length(bufferHalfCount)
-        var vSum: Float = 0.0
+        var resultBuffer    = [Float](repeating:0.0, count: bufferHalfCount)
+        var tempBuffer      = [Float](repeating:0.0, count: bufferHalfCount)
+        var tempBufferSq    = [Float](repeating:0.0, count: bufferHalfCount)
+        let len             = vDSP_Length(bufferHalfCount)
+        var vSum: Float     = 0.0
 
         for tau in 0 ..< bufferHalfCount {
             let bufferTau = UnsafePointer<Float>(buffer).advanced(by: tau)

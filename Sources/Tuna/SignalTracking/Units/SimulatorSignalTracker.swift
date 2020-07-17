@@ -1,7 +1,7 @@
 import AVFoundation
 
 /*
- * A mock implemamtation of SignalTracker useful for unit testing and/or running in the simulator.
+ * A mock implememtation of SignalTracker useful for unit testing and/or running in the simulator.
  *
  * It creates a series of PCM buffers filled with sine waves of given frequencies, 
  * and passes the buffers to the delegate every delayMs milliseconds.
