@@ -24,12 +24,10 @@ final class OutputSignalTracker: SignalTracker {
 
     // MARK: - Initialization
 
-    required init(audioUrl: URL,
-                  bufferSize: AVAudioFrameCount = 2048,
-                  delegate: SignalTrackerDelegate? = nil) {
-        self.audioUrl = audioUrl
+    required init(audioUrl: URL, bufferSize: AVAudioFrameCount = 2048, delegate: SignalTrackerDelegate? = nil) {
+        self.audioUrl   = audioUrl
         self.bufferSize = bufferSize
-        self.delegate = delegate
+        self.delegate   = delegate
     }
 
     // MARK: - Tracking
@@ -38,7 +36,7 @@ final class OutputSignalTracker: SignalTracker {
 
         #if os(iOS)
         let session = AVAudioSession.sharedInstance()
-        try session.setCategory(AVAudioSessionCategoryPlayback)
+        try session.setCategory(.playback)
         #endif
 
         audioEngine = AVAudioEngine()

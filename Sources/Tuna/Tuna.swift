@@ -1,3 +1,3 @@
-struct Tuna {
+public struct Tuna {
     var text = "Hello, World!"
 }

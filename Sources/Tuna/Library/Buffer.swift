@@ -1,7 +1,7 @@
 struct Buffer {
-    var elements: [Float]
-    var realElements: [Float]?
-    var imagElements: [Float]?
+    let elements: [Float]
+    let realElements: [Float]?
+    let imagElements: [Float]?
 
     var count: Int {
         elements.count
@@ -10,7 +10,7 @@ struct Buffer {
     // MARK: - Initialization
 
     init(elements: [Float], realElements: [Float]? = nil, imagElements: [Float]? = nil) {
-        self.elements = elements
+        self.elements     = elements
         self.realElements = realElements
         self.imagElements = imagElements
     }

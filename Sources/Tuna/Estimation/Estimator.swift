@@ -24,8 +24,6 @@ extension Estimator {
     }
 
     func sanitize(location: Int, reserveLocation: Int, elements: [Float]) -> Int {
-        return location >= 0 && location < elements.count
-            ? location
-            : reserveLocation
+        (location >= 0 && location < elements.count) ? location : reserveLocation
     }
 }

@@ -1,6 +1,9 @@
 import Foundation
 import AVFoundation
-//import Pitchy
+
+#if canImport(UIKit)
+import UIKit
+#endif
 
 public protocol PitchEngineDelegate: class {
   func pitchEngine(_ pitchEngine: PitchEngine, didReceivePitch pitch: Pitch)
@@ -76,14 +79,14 @@ public final class PitchEngine {
     #if os(iOS)
     let audioSession = AVAudioSession.sharedInstance()
 
-    switch audioSession.recordPermission() {
+    switch audioSession.recordPermission {
 
-    case AVAudioSessionRecordPermission.granted:
-      activate()
+    case .granted:
+        activate()
 
-    case AVAudioSessionRecordPermission.denied:
+    case .denied:
       DispatchQueue.main.async {
-        if let settingsURL = URL(string: UIApplicationOpenSettingsURLString) {
+        if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
           UIApplication.shared.openURL(settingsURL)
         }
       }
@@ -102,6 +105,9 @@ public final class PitchEngine {
           weakSelf.activate()
         }
       }
+
+    @unknown default:
+        break
     }
     #endif
   }

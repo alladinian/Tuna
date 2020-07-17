@@ -5,12 +5,12 @@ protocol LocationEstimator: Estimator {
 // MARK: - Default implementation
 
 extension LocationEstimator {
-    var transformer: Transformer {
-        FFTTransformer()
-    }
+
+    var transformer: Transformer { FFTTransformer() }
 
     func estimateFrequency(sampleRate: Float, buffer: Buffer) throws -> Float {
         let location = try estimateLocation(buffer: buffer)
         return estimateFrequency(sampleRate: sampleRate, location: location, bufferCount: buffer.count)
     }
+
 }

@@ -43,14 +43,14 @@ final class InputSignalTracker: SignalTracker {
     func start() throws {
 
         #if os(iOS)
-        try session.setCategory(AVAudioSessionCategoryPlayAndRecord)
+        try session.setCategory(.playAndRecord)
 
         // check input type
         let currentRoute = session.currentRoute
         if currentRoute.outputs.count != 0 {
             for description in currentRoute.outputs {
-                if (description.portType != AVAudioSessionPortHeadphones) { // input from speaker if port is not headphones
-                    try session.overrideOutputAudioPort(AVAudioSessionPortOverride.speaker)
+                if (description.portType != .headphones) { // input from speaker if port is not headphones
+                    try session.overrideOutputAudioPort(.speaker)
                 } else { // input from default (headphones)
                     try session.overrideOutputAudioPort(.none)
                 }
@@ -71,12 +71,10 @@ final class InputSignalTracker: SignalTracker {
 
             let levelThreshold = self.levelThreshold ?? -1000000.0
 
-            if averageLevel > levelThreshold {
-                DispatchQueue.main.async {
+            DispatchQueue.main.async {
+                if averageLevel > levelThreshold {
                     self.delegate?.signalTracker(self, didReceiveBuffer: buffer, atTime: time)
-                }
-            } else {
-                DispatchQueue.main.async {
+                } else {
                     self.delegate?.signalTrackerWentBelowLevelThreshold(self)
                 }
             }
@@ -84,6 +82,7 @@ final class InputSignalTracker: SignalTracker {
 
         try audioEngine?.start()
         captureSession.startRunning()
+
         guard captureSession.isRunning == true else {
             throw InputSignalTrackerError.inputNodeMissing
         }
@@ -112,6 +111,8 @@ final class InputSignalTracker: SignalTracker {
 
             let connection = audioOutput.connections[0]
             audioChannel = connection.audioChannels[0]
-        } catch {}
+        } catch {
+            debugPrint(error)
+        }
     }
 }
