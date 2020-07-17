@@ -190,7 +190,209 @@ final class PitchyTests: XCTestCase {
         }
     }
 
+    func testAcousticWave() {
+        let waves = [
+            (frequency: 440.0,
+             wavelength: 0.7795,
+             period: 0.00227259
+            ),
+            (frequency: 1000.0,
+             wavelength: 0.343,
+             period: 0.001
+            )
+        ]
+
+        XCTAssertTrue(AcousticWave.speed ≈ (343, 0.001))
+
+        // Freq init
+        waves.forEach {
+            let wave = try! AcousticWave(frequency: $0.frequency)
+
+            XCTAssertTrue(wave.frequency ≈ ($0.frequency, 0.01))
+            XCTAssertTrue(wave.wavelength ≈ ($0.wavelength, 0.01))
+            XCTAssertTrue(wave.period ≈ ($0.period, 0.01))
+
+            for (index, value) in wave.harmonics.enumerated() {
+                XCTAssertTrue(value.frequency ≈ (Double(index + 1) * $0.frequency, 0.01))
+            }
+        }
+
+        // Wave init
+        waves.forEach {
+            let wave = try! AcousticWave(wavelength: $0.wavelength)
+
+            XCTAssertTrue(wave.frequency ≈ ($0.frequency, 0.1))
+            XCTAssertTrue(wave.wavelength ≈ ($0.wavelength, 0.01))
+            XCTAssertTrue(wave.period ≈ ($0.period, 0.01))
+
+            for (index, value) in wave.harmonics.enumerated() {
+                XCTAssertTrue(value.frequency ≈ (Double(index + 1) * $0.frequency, 1))
+            }
+        }
+
+        // Period init
+        waves.forEach {
+            let wave = try! AcousticWave(period: $0.period)
+
+            XCTAssertTrue(wave.frequency ≈ ($0.frequency, 0.1))
+            XCTAssertTrue(wave.wavelength ≈ ($0.wavelength, 0.01))
+            XCTAssertTrue(wave.period ≈ ($0.period, 0.01))
+
+            for (index, value) in wave.harmonics.enumerated() {
+                XCTAssertTrue(value.frequency ≈ (Double(index + 1) * $0.frequency, 1))
+            }
+        }
+    }
+
+    func testNotes() {
+        let letters = Note.Letter.allCases
+        XCTAssertEqual(letters.count, 12)
+
+        XCTAssertEqual(letters[0], Note.Letter.C)
+        XCTAssertEqual(letters[1], Note.Letter.CSharp)
+        XCTAssertEqual(letters[2], Note.Letter.D)
+        XCTAssertEqual(letters[3], Note.Letter.DSharp)
+        XCTAssertEqual(letters[4], Note.Letter.E)
+        XCTAssertEqual(letters[5], Note.Letter.F)
+        XCTAssertEqual(letters[6], Note.Letter.FSharp)
+        XCTAssertEqual(letters[7], Note.Letter.G)
+        XCTAssertEqual(letters[8], Note.Letter.GSharp)
+        XCTAssertEqual(letters[9], Note.Letter.A)
+        XCTAssertEqual(letters[10], Note.Letter.ASharp)
+        XCTAssertEqual(letters[11], Note.Letter.B)
+
+        var note: Note!
+
+        let notes = [
+            (index: -9, letter: Note.Letter.C, octave: 4, frequency: 261.626,
+             string: "C4", lower: "B3", higher: "C#4"),
+            (index: 16, letter: Note.Letter.CSharp, octave: 6, frequency: 1108.73,
+             string: "C#6", lower: "C6", higher: "D6"),
+            (index: 5, letter: Note.Letter.D, octave: 5, frequency: 587.330,
+             string: "D5", lower: "C#5", higher: "D#5"),
+            (index: 18, letter: Note.Letter.DSharp, octave: 6, frequency: 1244.51,
+             string: "D#6", lower: "D6", higher: "E6"),
+            (index: 31, letter: Note.Letter.E, octave: 7, frequency: 2637.02,
+             string: "E7", lower: "D#7", higher: "F7"),
+            (index: -16, letter: Note.Letter.F, octave: 3, frequency: 174.614,
+             string: "F3", lower: "E3", higher: "F#3"),
+            (index: -27, letter: Note.Letter.FSharp, octave: 2, frequency: 92.4986,
+             string: "F#2", lower: "F2", higher: "G2"),
+            (index: -38, letter: Note.Letter.G, octave: 1, frequency: 48.9994,
+             string: "G1", lower: "F#1", higher: "G#1"),
+            (index: -13, letter: Note.Letter.GSharp, octave: 3, frequency: 207.652,
+             string: "G#3", lower: "G3", higher: "A3"),
+            (index: 0, letter: Note.Letter.A, octave: 4, frequency: 440,
+             string: "A4", lower: "G#4", higher: "A#4"),
+            (index: -47, letter: Note.Letter.ASharp, octave: 0, frequency: 29.1352,
+             string: "A#0", lower: "A0", higher: "B0"),
+            (index: 2, letter: Note.Letter.B, octave: 4, frequency: 493.883,
+             string: "B4", lower: "A#4", higher: "C5")
+        ]
+
+        // Index
+        notes.forEach {
+            note = try! Note(index: $0.index)
+            XCTAssertNotNil(note)
+
+            XCTAssertEqual(note.index, $0.index)
+            XCTAssertEqual(note.letter, $0.letter)
+            XCTAssertEqual(note.octave, $0.octave)
+            XCTAssertTrue(note.frequency ≈ ($0.frequency, 0.01))
+            XCTAssertTrue(note.wave.frequency ≈ ($0.frequency, 0.01))
+            XCTAssertEqual(note.string, $0.string)
+            XCTAssertEqual(try! note.lower().string, $0.lower)
+            XCTAssertEqual(try! note.higher().string, $0.higher)
+        }
+
+        // Frequency
+        notes.forEach {
+            note = try! Note(frequency: $0.frequency)
+            XCTAssertNotNil(note)
+
+            XCTAssertEqual(note.index, $0.index)
+            XCTAssertEqual(note.letter, $0.letter)
+            XCTAssertEqual(note.octave, $0.octave)
+            XCTAssertTrue(note.frequency ≈ ($0.frequency, 0.01))
+            XCTAssertTrue(note.wave.frequency ≈ ($0.frequency, 0.01))
+            XCTAssertEqual(note.string, $0.string)
+            XCTAssertEqual(try! note.lower().string, $0.lower)
+            XCTAssertEqual(try! note.higher().string, $0.higher)
+        }
+
+        // Letter & Octave
+        notes.forEach {
+            note = try! Note(letter: $0.letter, octave: $0.octave)
+            XCTAssertNotNil(note)
+
+            XCTAssertEqual(note.index, $0.index)
+            XCTAssertEqual(note.letter, $0.letter)
+            XCTAssertEqual(note.octave, $0.octave)
+            XCTAssertTrue(note.frequency ≈ ($0.frequency, 0.01))
+            XCTAssertTrue(note.wave.frequency ≈ ($0.frequency, 0.01))
+            XCTAssertEqual(note.string, $0.string)
+            XCTAssertEqual(try! note.lower().string, $0.lower)
+            XCTAssertEqual(try! note.higher().string, $0.higher)
+        }
+    }
+
+    func testPitch() {
+        let offsets = [
+            (frequency: 445.0,
+             lower: Pitch.Offset(note: try! Note(index: 0), frequency: 5, percentage: 19.1, cents: 19.56),
+             higher: Pitch.Offset(note: try! Note(index: 1), frequency: -21.164, percentage: -80.9, cents: -80.4338),
+             closest: "A4"
+            ),
+            (frequency: 108.0,
+             lower: Pitch.Offset(note: try! Note(index: -25), frequency: 4.174, percentage: 67.6, cents: 68.2333),
+             higher: Pitch.Offset(note: try! Note(index: -24), frequency: -2, percentage: -32.39, cents: -31.76),
+             closest: "A2"
+            )
+        ]
+
+        func offsetInit() {
+            // Rearrange offsets based on frequency
+            let sample = offsets[0]
+            let offsets = Pitch.Offsets(sample.higher, sample.lower)
+
+            XCTAssertEqual(offsets.lower.note.index, sample.lower.note.index)
+            XCTAssertEqual(offsets.higher.note.index, sample.higher.note.index)
+        }
+
+        offsetInit()
+
+        offsets.forEach {
+            let pitch = try! Pitch(frequency: $0.frequency)
+
+            XCTAssertTrue(pitch.frequency ≈ ($0.frequency, 0.01))
+            XCTAssertTrue(pitch.wave.frequency ≈ ($0.frequency, 0.01))
+        }
+
+        offsets.forEach {
+            let pitch = try! Pitch(frequency: $0.frequency)
+            let result = pitch.offsets
+
+            XCTAssertTrue(result.lower.frequency ≈ ($0.lower.frequency, 0.01))
+            XCTAssertTrue(result.lower.percentage ≈ ($0.lower.percentage, 0.1))
+            XCTAssertEqual(result.lower.note.index, $0.lower.note.index)
+            XCTAssertTrue(result.lower.cents ≈ ($0.lower.cents, 0.01))
+
+            XCTAssertTrue(result.higher.frequency ≈ ($0.higher.frequency, 0.01))
+            XCTAssertTrue(result.higher.percentage ≈ ($0.higher.percentage, 0.1))
+            XCTAssertEqual(result.higher.note.index, $0.higher.note.index)
+            XCTAssertTrue(result.higher.cents ≈ ($0.higher.cents, 0.01))
+
+            XCTAssertEqual(result.closest.note.string, $0.closest)
+        }
+    }
+
     static var allTests = [
         ("testFrequencyValidator", testFrequencyValidator),
+        ("testNoteCalculator", testNoteCalculator),
+        ("testPichCalculator", testPichCalculator),
+        ("testWaveCalculator", testWaveCalculator),
+        ("testAcousticWave", testAcousticWave),
+        ("testNotes", testNotes),
+        ("testPitch", testPitch),
     ]
 }
