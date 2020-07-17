@@ -9,24 +9,26 @@
 import Foundation
 
 final class YINEstimator: Estimator {
-  let transformer: Transformer = YINTransformer()
-  let threshold: Float = 0.05
 
-  func estimateFrequency(sampleRate: Float, buffer: Buffer) throws -> Float {
-    var elements = buffer.elements
+    let transformer: Transformer = YINTransformer()
+    let threshold: Float = 0.05
 
-    YINUtil.cumulativeDifference(yinBuffer: &elements)
+    func estimateFrequency(sampleRate: Float, buffer: Buffer) throws -> Float {
+        var elements = buffer.elements
 
-    let tau = YINUtil.absoluteThreshold(yinBuffer: elements, withThreshold: threshold)
-    var f0: Float
+        YINUtil.cumulativeDifference(yinBuffer: &elements)
 
-    if tau != 0 {
-      let interpolatedTau = YINUtil.parabolicInterpolation(yinBuffer: elements, tau: tau)
-      f0 = sampleRate / interpolatedTau
-    } else {
-      f0 = 0.0
+        let tau = YINUtil.absoluteThreshold(yinBuffer: elements, withThreshold: threshold)
+        let f0: Float
+
+        if tau != 0 {
+            let interpolatedTau = YINUtil.parabolicInterpolation(yinBuffer: elements, tau: tau)
+            f0 = sampleRate / interpolatedTau
+        } else {
+            f0 = 0.0
+        }
+
+        return f0
     }
 
-    return f0
-  }
 }

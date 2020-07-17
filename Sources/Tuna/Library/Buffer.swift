@@ -1,17 +1,17 @@
 struct Buffer {
-  var elements: [Float]
-  var realElements: [Float]?
-  var imagElements: [Float]?
+    var elements: [Float]
+    var realElements: [Float]?
+    var imagElements: [Float]?
 
-  var count: Int {
-    return elements.count
-  }
+    var count: Int {
+        elements.count
+    }
 
-  // MARK: - Initialization
+    // MARK: - Initialization
 
-  init(elements: [Float], realElements: [Float]? = nil, imagElements: [Float]? = nil) {
-    self.elements = elements
-    self.realElements = realElements
-    self.imagElements = imagElements
-  }
+    init(elements: [Float], realElements: [Float]? = nil, imagElements: [Float]? = nil) {
+        self.elements = elements
+        self.realElements = realElements
+        self.imagElements = imagElements
+    }
 }
