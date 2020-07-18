@@ -1,3 +1,5 @@
+import Foundation
+
 final class HPSEstimator: LocationEstimator {
 
     private let harmonics = 5

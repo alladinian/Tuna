@@ -1,8 +1,16 @@
 import XCTest
 import Accelerate
+import AVFoundation
 @testable import Tuna
 
 final class TunaTests: XCTestCase {
+
+    var estimator: Estimator!
+
+    override func setUp() {
+        super.setUp()
+        estimator = HPSEstimator()
+    }
 
     func testConfig() {
         let config = Config()
@@ -42,13 +50,6 @@ final class TunaTests: XCTestCase {
 
         // MaxValue
         XCTAssertTrue(factory.create(.maxValue) is MaxValueEstimator)
-    }
-
-    var estimator: Estimator!
-
-    override func setUp() {
-        super.setUp()
-        estimator = HPSEstimator()
     }
 
     func testEstimatorBuffer() {
@@ -91,10 +92,17 @@ final class TunaTests: XCTestCase {
         var expected = [Float](repeating: 0.0, count: array.count)
         vvsqrtf(&expected, array, [Int32(array.count)])
 
-        XCTAssertEqual(transformer.sqrtq(array), expected)
+        XCTAssertEqual(transformer.sqrtq(array), expected, "returns the array's square")
     }
 
     static var allTests = [
         ("testConfig", testConfig),
+        ("testEstimationFactory", testEstimationFactory),
+        ("testEstimatorBuffer", testEstimatorBuffer),
+        ("testEstimatorSanitizeInBounds", testEstimatorSanitizeInBounds),
+        ("testEstimatorOutOfBounds", testEstimatorOutOfBounds),
+        ("testArrayExtensions", testArrayExtensions),
+        ("testBuffer", testBuffer),
+        ("testFFT", testFFT),
     ]
 }

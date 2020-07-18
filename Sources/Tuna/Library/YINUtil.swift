@@ -16,7 +16,7 @@ final class YINUtil {
     // Slow and eats a lot of CPU, but working
     class func difference2(buffer: [Float]) -> [Float] {
         let bufferHalfCount = buffer.count / 2
-        var resultBuffer = [Float](repeating:0.0, count:bufferHalfCount)
+        var resultBuffer    = [Float](repeating:0.0, count:bufferHalfCount)
 
         for tau in 0 ..< bufferHalfCount {
             for i in 0 ..< bufferHalfCount {
@@ -163,8 +163,8 @@ final class YINUtil {
     }
 
     class func absoluteThreshold(yinBuffer: [Float], withThreshold threshold: Float) -> Int {
-        var tau = 2
-        var minTau = 0
+        var tau           = 2
+        var minTau        = 0
         var minVal: Float = 1000.0
 
         while tau < yinBuffer.count {

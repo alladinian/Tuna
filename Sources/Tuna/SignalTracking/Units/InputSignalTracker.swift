@@ -18,23 +18,22 @@ final class InputSignalTracker: SignalTracker {
     private let bus = 0
 
     var peakLevel: Float? {
-        return audioChannel?.peakHoldLevel
+        audioChannel?.peakHoldLevel
     }
 
     var averageLevel: Float? {
-        return audioChannel?.averagePowerLevel
+        audioChannel?.averagePowerLevel
     }
 
     var mode: SignalTrackerMode {
-        return .record
+        .record
     }
 
     // MARK: - Initialization
 
-    required init(bufferSize: AVAudioFrameCount = 2048,
-                  delegate: SignalTrackerDelegate? = nil) {
+    required init(bufferSize: AVAudioFrameCount = 2048, delegate: SignalTrackerDelegate? = nil) {
         self.bufferSize = bufferSize
-        self.delegate = delegate
+        self.delegate   = delegate
         setupAudio()
     }
 
@@ -46,13 +45,16 @@ final class InputSignalTracker: SignalTracker {
         try session.setCategory(.playAndRecord)
 
         // check input type
-        let currentRoute = session.currentRoute
-        if currentRoute.outputs.count != 0 {
-            for description in currentRoute.outputs {
-                if (description.portType != .headphones) { // input from speaker if port is not headphones
-                    try session.overrideOutputAudioPort(.speaker)
-                } else { // input from default (headphones)
+        let outputs = session.currentRoute.outputs
+        if !outputs.isEmpty {
+            for output in outputs {
+                switch output.portType {
+                case .headphones:
+                    // input from default (headphones)
                     try session.overrideOutputAudioPort(.none)
+                default:
+                    // input from speaker if port is not headphones
+                    try session.overrideOutputAudioPort(.speaker)
                 }
             }
         }
@@ -101,16 +103,15 @@ final class InputSignalTracker: SignalTracker {
 
     private func setupAudio() {
         do {
-            let audioDevice = AVCaptureDevice.default(for: AVMediaType.audio)
+            let audioDevice       = AVCaptureDevice.default(for: AVMediaType.audio)
             let audioCaptureInput = try AVCaptureDeviceInput(device: audioDevice!)
+            let audioOutput       = AVCaptureAudioDataOutput()
 
             captureSession.addInput(audioCaptureInput)
-
-            let audioOutput = AVCaptureAudioDataOutput()
             captureSession.addOutput(audioOutput)
 
             let connection = audioOutput.connections[0]
-            audioChannel = connection.audioChannels[0]
+            audioChannel   = connection.audioChannels[0]
         } catch {
             debugPrint(error)
         }

@@ -59,42 +59,39 @@ public final class SimulatorSignalTracker: SignalTracker {
             let buffer = createPCMBuffer(frequency)
 
             if i == 0 {
-                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(50), execute: {
+                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(50)) {
                     self.delegate?.signalTracker(self, didReceiveBuffer: buffer, atTime: time)
-                })
+                }
             } else {
-                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(delay * i), execute: {
+                DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(delay * i)) {
                     self.delegate?.signalTracker(self, didReceiveBuffer: buffer, atTime: time)
-                })
+                }
             }
 
             i += 1
         }
 
-        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(delay * i), execute: {
+        DispatchQueue.main.asyncAfter(deadline: .now() + .milliseconds(delay * i)) {
             self.delegate?.signalTrackerWentBelowLevelThreshold(self)
-        })
+        }
     }
 
     public func stop() {}
 
     private func createPCMBuffer(_ frequency: Double) -> AVAudioPCMBuffer {
         let format = AVAudioFormat(standardFormatWithSampleRate: SimulatorSignalTracker.sampleRate, channels: 1)
-        let buffer = AVAudioPCMBuffer(
-            pcmFormat: format!,
-            frameCapacity: AVAudioFrameCount(SimulatorSignalTracker.sampleCount)
-        )
+        let buffer = AVAudioPCMBuffer(pcmFormat: format!, frameCapacity: AVAudioFrameCount(SimulatorSignalTracker.sampleCount))
 
-        if let channelData = buffer?.floatChannelData {
-            let velocity = Float32(2.0 * .pi * frequency / SimulatorSignalTracker.sampleRate)
+        guard let channelData = buffer?.floatChannelData else { return buffer! }
 
-            for i in 0..<SimulatorSignalTracker.sampleCount {
-                let sample: Float32 = sin(velocity * Float32(i))
-                channelData[0][i] = sample
-            }
+        let velocity = Float32(2.0 * .pi * frequency / SimulatorSignalTracker.sampleRate)
 
-            buffer?.frameLength = (buffer?.frameCapacity)!
+        for i in 0..<SimulatorSignalTracker.sampleCount {
+            let sample: Float32 = sin(velocity * Float32(i))
+            channelData[0][i] = sample
         }
+
+        buffer?.frameLength = (buffer?.frameCapacity)!
 
         return buffer!
     }

@@ -6,159 +6,154 @@ import UIKit
 #endif
 
 public protocol PitchEngineDelegate: class {
-  func pitchEngine(_ pitchEngine: PitchEngine, didReceivePitch pitch: Pitch)
-  func pitchEngine(_ pitchEngine: PitchEngine, didReceiveError error: Error)
-  func pitchEngineWentBelowLevelThreshold(_ pitchEngine: PitchEngine)
+    func pitchEngine(_ pitchEngine: PitchEngine, didReceivePitch pitch: Pitch)
+    func pitchEngine(_ pitchEngine: PitchEngine, didReceiveError error: Error)
+    func pitchEngineWentBelowLevelThreshold(_ pitchEngine: PitchEngine)
 }
 
 public final class PitchEngine {
 
-  public enum Error: Swift.Error {
-    case recordPermissionDenied
-  }
-
-  public let bufferSize: AVAudioFrameCount
-  public private(set) var active = false
-  public weak var delegate: PitchEngineDelegate?
-
-  private let estimator: Estimator
-  private let signalTracker: SignalTracker
-  private let queue: DispatchQueue
-
-  public var mode: SignalTrackerMode {
-    return signalTracker.mode
-  }
-
-  public var levelThreshold: Float? {
-    get {
-      return self.signalTracker.levelThreshold
-    }
-    set {
-      self.signalTracker.levelThreshold = newValue
-    }
-  }
-
-  public var signalLevel: Float {
-    return signalTracker.averageLevel ?? 0.0
-  }
-
-  // MARK: - Initialization
-
-  public init(config: Config = Config(),
-              signalTracker: SignalTracker? = nil,
-              delegate: PitchEngineDelegate? = nil) {
-    bufferSize = config.bufferSize
-
-    let factory = EstimationFactory()
-    estimator = factory.create(config.estimationStrategy)
-
-    if let signalTracker = signalTracker {
-      self.signalTracker = signalTracker
-    } else {
-      if let audioUrl = config.audioUrl {
-        self.signalTracker = OutputSignalTracker(audioUrl: audioUrl, bufferSize: bufferSize)
-      } else {
-        self.signalTracker = InputSignalTracker(bufferSize: bufferSize)
-      }
+    public enum Error: Swift.Error {
+        case recordPermissionDenied
     }
 
-    self.queue = DispatchQueue(label: "BeethovenQueue", attributes: [])
-    self.signalTracker.delegate = self
-    self.delegate = delegate
-  }
+    public let bufferSize: AVAudioFrameCount
+    public private(set) var active = false
+    public weak var delegate: PitchEngineDelegate?
 
-  // MARK: - Processing
+    private let estimator: Estimator
+    private let signalTracker: SignalTracker
+    private let queue = DispatchQueue(label: "TunaQueue", attributes: [])
 
-  public func start() {
-
-    guard mode == .playback else {
-      activate()
-      return
+    public var mode: SignalTrackerMode {
+        return signalTracker.mode
     }
 
-    #if os(iOS)
-    let audioSession = AVAudioSession.sharedInstance()
-
-    switch audioSession.recordPermission {
-
-    case .granted:
-        activate()
-
-    case .denied:
-      DispatchQueue.main.async {
-        if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
-          UIApplication.shared.openURL(settingsURL)
+    public var levelThreshold: Float? {
+        get {
+            self.signalTracker.levelThreshold
         }
-      }
+        set {
+            self.signalTracker.levelThreshold = newValue
+        }
+    }
 
-    case AVAudioSessionRecordPermission.undetermined:
-      AVAudioSession.sharedInstance().requestRecordPermission { [weak self] granted  in
-        guard let weakSelf = self else { return }
+    public var signalLevel: Float {
+        signalTracker.averageLevel ?? 0.0
+    }
 
-        guard granted else {
-          weakSelf.delegate?.pitchEngine(weakSelf,
-                                         didReceiveError: Error.recordPermissionDenied)
-          return
+    // MARK: - Initialization
+
+    public init(config: Config = Config(), signalTracker: SignalTracker? = nil, delegate: PitchEngineDelegate? = nil) {
+        bufferSize = config.bufferSize
+
+        let factory = EstimationFactory()
+        estimator = factory.create(config.estimationStrategy)
+
+        if let signalTracker = signalTracker {
+            self.signalTracker = signalTracker
+        } else {
+            if let audioUrl = config.audioUrl {
+                self.signalTracker = OutputSignalTracker(audioUrl: audioUrl, bufferSize: bufferSize)
+            } else {
+                self.signalTracker = InputSignalTracker(bufferSize: bufferSize)
+            }
         }
 
-        DispatchQueue.main.async {
-          weakSelf.activate()
+        self.signalTracker.delegate = self
+        self.delegate               = delegate
+    }
+
+    // MARK: - Processing
+
+    public func start() {
+
+        guard mode == .playback else {
+            activate()
+            return
         }
-      }
 
-    @unknown default:
-        break
+        #if os(iOS)
+        let audioSession = AVAudioSession.sharedInstance()
+
+        switch audioSession.recordPermission {
+
+        case .granted:
+            activate()
+
+        case .denied:
+            DispatchQueue.main.async {
+                if let settingsURL = URL(string: UIApplication.openSettingsURLString) {
+                    UIApplication.shared.openURL(settingsURL)
+                }
+            }
+
+        case AVAudioSessionRecordPermission.undetermined:
+            AVAudioSession.sharedInstance().requestRecordPermission { [weak self] granted  in
+                guard let weakSelf = self else { return }
+
+                guard granted else {
+                    weakSelf.delegate?.pitchEngine(weakSelf,
+                                                   didReceiveError: Error.recordPermissionDenied)
+                    return
+                }
+
+                DispatchQueue.main.async {
+                    weakSelf.activate()
+                }
+            }
+
+        @unknown default:
+            break
+        }
+        #endif
     }
-    #endif
-  }
 
-  public func stop() {
-    signalTracker.stop()
-    active = false
-  }
-
-  func activate() {
-    do {
-      try signalTracker.start()
-      active = true
-    } catch {
-      delegate?.pitchEngine(self, didReceiveError: error)
+    public func stop() {
+        signalTracker.stop()
+        active = false
     }
-  }
+
+    func activate() {
+        do {
+            try signalTracker.start()
+            active = true
+        } catch {
+            delegate?.pitchEngine(self, didReceiveError: error)
+        }
+    }
 }
 
 // MARK: - SignalTrackingDelegate
 
 extension PitchEngine: SignalTrackerDelegate {
-  public func signalTracker(_ signalTracker: SignalTracker,
-                            didReceiveBuffer buffer: AVAudioPCMBuffer,
-                            atTime time: AVAudioTime) {
-      queue.async { [weak self] in
-        guard let `self` = self else { return }
 
-        do {
-          let transformedBuffer = try self.estimator.transformer.transform(buffer: buffer)
-          let frequency = try self.estimator.estimateFrequency(
-            sampleRate: Float(time.sampleRate),
-            buffer: transformedBuffer)
-          let pitch = try Pitch(frequency: Double(frequency))
+    public func signalTracker(_ signalTracker: SignalTracker, didReceiveBuffer buffer: AVAudioPCMBuffer, atTime time: AVAudioTime) {
+        queue.async { [weak self] in
+            guard let self = self else { return }
 
-          DispatchQueue.main.async { [weak self] in
-            guard let `self` = self else { return }
-            self.delegate?.pitchEngine(self, didReceivePitch: pitch)
-          }
-        } catch {
-          DispatchQueue.main.async { [weak self] in
-            guard let `self` = self else { return }
-            self.delegate?.pitchEngine(self, didReceiveError: error)
-          }
+            do {
+                let transformedBuffer = try self.estimator.transformer.transform(buffer: buffer)
+                let frequency         = try self.estimator.estimateFrequency(sampleRate: Float(time.sampleRate), buffer: transformedBuffer)
+                let pitch             = try Pitch(frequency: Double(frequency))
+
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    self.delegate?.pitchEngine(self, didReceivePitch: pitch)
+                }
+            } catch {
+                DispatchQueue.main.async { [weak self] in
+                    guard let self = self else { return }
+                    self.delegate?.pitchEngine(self, didReceiveError: error)
+                }
+            }
         }
     }
-  }
 
-  public func signalTrackerWentBelowLevelThreshold(_ signalTracker: SignalTracker) {
-    DispatchQueue.main.async {
-      self.delegate?.pitchEngineWentBelowLevelThreshold(self)
+    public func signalTrackerWentBelowLevelThreshold(_ signalTracker: SignalTracker) {
+        DispatchQueue.main.async {
+            self.delegate?.pitchEngineWentBelowLevelThreshold(self)
+        }
     }
-  }
+
 }
