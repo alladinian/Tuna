@@ -42,9 +42,7 @@ public struct NoteCalculator {
     // MARK: - Validators
 
     public static func isValid(index: Int) -> Bool {
-        let bounds = indexBounds
-        return index >= bounds.minimum
-            && index <= bounds.maximum
+        (indexBounds.minimum ... indexBounds.maximum) ~= index
     }
 
     public static func validate(index: Int) throws {
@@ -54,10 +52,7 @@ public struct NoteCalculator {
     }
 
     public static func isValid(octave: Int) -> Bool {
-        let bounds = octaveBounds
-
-        return octave >= bounds.minimum
-            && octave <= bounds.maximum
+        (octaveBounds.minimum ... octaveBounds.maximum) ~= octave
     }
 
     public static func validate(octave: Int) throws {
@@ -89,7 +84,7 @@ public struct NoteCalculator {
             lettersIndex = 0
         }
 
-        guard lettersIndex >= 0 && lettersIndex < letters.count else {
+        guard (0 ..< letters.count) ~= lettersIndex else {
             throw PitchError.invalidPitchIndex
         }
 
@@ -99,7 +94,7 @@ public struct NoteCalculator {
     public static func octave(forIndex index: Int) throws -> Int {
         try validate(index: index)
 
-        let count = letters.count
+        let count            = letters.count
         let resNegativeIndex = Standard.octave - (abs(index) + 2) / count
         let resPositiveIndex = Standard.octave + (index + 9) / count
 
@@ -120,9 +115,9 @@ public struct NoteCalculator {
     public static func index(forLetter letter: Note.Letter, octave: Int) throws -> Int {
         try validate(octave: octave)
 
-        let count = letters.count
+        let count       = letters.count
         let letterIndex = letters.firstIndex(of: letter) ?? 0
-        let offset = letterIndex < 3 ? 0 : count
+        let offset      = letterIndex < 3 ? 0 : count
 
         return letterIndex + count * (octave - Standard.octave) - offset
     }
