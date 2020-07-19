@@ -13,7 +13,7 @@ import AVFoundation
 struct YINTransformer: Transformer {
 
     func transform(buffer: AVAudioPCMBuffer) throws -> Buffer {
-        let buffer = try SimpleTransformer().transform(buffer: buffer)
+        let buffer       = try PassthroughTransformer().transform(buffer: buffer)
         let diffElements = YINUtil.differenceA(buffer: buffer.elements)
         return Buffer(elements: diffElements)
     }
