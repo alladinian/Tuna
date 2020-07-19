@@ -10,7 +10,7 @@
 import Foundation
 import AVFoundation
 
-final class YINTransformer: Transformer {
+struct YINTransformer: Transformer {
 
     func transform(buffer: AVAudioPCMBuffer) throws -> Buffer {
         let buffer = try SimpleTransformer().transform(buffer: buffer)
