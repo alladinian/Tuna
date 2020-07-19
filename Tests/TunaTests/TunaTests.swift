@@ -20,36 +20,35 @@ final class TunaTests: XCTestCase {
     }
 
     func testEstimationFactory() {
-        let factory = EstimationFactory()
 
         // QuadradicEstimator
-        XCTAssertTrue(factory.create(.quadradic) is QuadradicEstimator)
+        XCTAssertTrue(EstimationStrategy.quadradic.estimator is QuadradicEstimator)
 
         // Barycentric
-        XCTAssertTrue(factory.create(.barycentric) is BarycentricEstimator)
+        XCTAssertTrue(EstimationStrategy.barycentric.estimator is BarycentricEstimator)
 
         // QuinnsFirst
-        XCTAssertTrue(factory.create(.quinnsFirst) is QuinnsFirstEstimator)
+        XCTAssertTrue(EstimationStrategy.quinnsFirst.estimator is QuinnsFirstEstimator)
 
 
         // QuinnsSecond
-        XCTAssertTrue(factory.create(.quinnsSecond) is QuinnsSecondEstimator)
+        XCTAssertTrue(EstimationStrategy.quinnsSecond.estimator is QuinnsSecondEstimator)
 
 
         // Jains
-        XCTAssertTrue(factory.create(.jains) is JainsEstimator)
+        XCTAssertTrue(EstimationStrategy.jains.estimator is JainsEstimator)
 
 
         // HPS
-        XCTAssertTrue(factory.create(.hps) is HPSEstimator)
+        XCTAssertTrue(EstimationStrategy.hps.estimator is HPSEstimator)
 
 
         // YIN
-        XCTAssertTrue(factory.create(.yin) is YINEstimator)
+        XCTAssertTrue(EstimationStrategy.yin.estimator is YINEstimator)
 
 
         // MaxValue
-        XCTAssertTrue(factory.create(.maxValue) is MaxValueEstimator)
+        XCTAssertTrue(EstimationStrategy.maxValue.estimator is MaxValueEstimator)
     }
 
     func testEstimatorBuffer() {

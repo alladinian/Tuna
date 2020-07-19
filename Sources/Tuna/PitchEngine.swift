@@ -46,9 +46,7 @@ public final class PitchEngine {
 
     public init(config: Config = Config(), signalTracker: SignalTracker? = nil, delegate: PitchEngineDelegate? = nil) {
         bufferSize = config.bufferSize
-
-        let factory = EstimationFactory()
-        estimator = factory.create(config.estimationStrategy)
+        estimator  = config.estimationStrategy.estimator
 
         if let signalTracker = signalTracker {
             self.signalTracker = signalTracker
