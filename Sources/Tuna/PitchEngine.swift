@@ -44,14 +44,14 @@ public final class PitchEngine {
 
     // MARK: - Initialization
 
-    public init(config: Config = Config(), signalTracker: SignalTracker? = nil, delegate: PitchEngineDelegate? = nil) {
-        bufferSize = config.bufferSize
-        estimator  = config.estimationStrategy.estimator
+    public init(bufferSize: AVAudioFrameCount = 4096, estimationStrategy: EstimationStrategy = .yin, audioUrl: URL? = nil, signalTracker: SignalTracker? = nil, delegate: PitchEngineDelegate? = nil) {
+        self.bufferSize = bufferSize
+        self.estimator  = estimationStrategy.estimator
 
         if let signalTracker = signalTracker {
             self.signalTracker = signalTracker
         } else {
-            if let audioUrl = config.audioUrl {
+            if let audioUrl = audioUrl {
                 self.signalTracker = OutputSignalTracker(audioUrl: audioUrl, bufferSize: bufferSize)
             } else {
                 self.signalTracker = InputSignalTracker(bufferSize: bufferSize)

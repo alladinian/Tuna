@@ -1,4 +1,4 @@
-public enum EstimationStrategy {
+public enum EstimationStrategy : CaseIterable {
   case maxValue
   case quadradic
   case barycentric

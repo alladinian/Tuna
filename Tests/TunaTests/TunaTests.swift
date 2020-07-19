@@ -12,13 +12,6 @@ final class TunaTests: XCTestCase {
         estimator = HPSEstimator()
     }
 
-    func testConfig() {
-        let config = Config()
-        XCTAssertEqual(config.bufferSize, 4096)
-        XCTAssertEqual(config.estimationStrategy, EstimationStrategy.yin)
-        XCTAssertNil(config.audioUrl)
-    }
-
     func testEstimationFactory() {
 
         // QuadradicEstimator
@@ -95,7 +88,6 @@ final class TunaTests: XCTestCase {
     }
 
     static var allTests = [
-        ("testConfig", testConfig),
         ("testEstimationFactory", testEstimationFactory),
         ("testEstimatorBuffer", testEstimatorBuffer),
         ("testEstimatorSanitizeInBounds", testEstimatorSanitizeInBounds),
