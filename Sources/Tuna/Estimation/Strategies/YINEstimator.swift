@@ -8,7 +8,7 @@
 
 import Foundation
 
-final class YINEstimator: Estimator {
+struct YINEstimator: Estimator {
 
     let transformer: Transformer = YINTransformer()
     let threshold: Float = 0.05

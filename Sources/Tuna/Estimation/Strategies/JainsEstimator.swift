@@ -1,6 +1,6 @@
 import Foundation
 
-final class JainsEstimator: LocationEstimator {
+struct JainsEstimator: LocationEstimator {
 
     func estimateLocation(buffer: Buffer) throws -> Int {
         let elements = buffer.elements

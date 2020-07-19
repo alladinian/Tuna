@@ -1,6 +1,6 @@
 import Foundation
 
-final class HPSEstimator: LocationEstimator {
+struct HPSEstimator: LocationEstimator {
 
     private let harmonics = 5
     private let minIndex = 20

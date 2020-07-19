@@ -1,6 +1,6 @@
 import Foundation
 
-final class QuadradicEstimator: LocationEstimator {
+struct QuadradicEstimator: LocationEstimator {
 
     func estimateLocation(buffer: Buffer) throws -> Int {
         let elements = buffer.elements

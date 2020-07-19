@@ -1,6 +1,6 @@
 import Foundation
 
-final class MaxValueEstimator: LocationEstimator {
+struct MaxValueEstimator: LocationEstimator {
 
     func estimateLocation(buffer: Buffer) throws -> Int {
         try maxBufferIndex(from: buffer.elements)
