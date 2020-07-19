@@ -1,5 +1,6 @@
 public struct Note {
 
+    /// The letter of a music note in English Notation
     public enum Letter: String, CaseIterable {
         case C      = "C"
         case CSharp = "C#"
@@ -15,18 +16,31 @@ public struct Note {
         case B      = "B"
     }
 
+    /// The index of the note
     public let index: Int
+
+    /// The letter of the note in English Notation
     public let letter: Letter
+
+    /// The octave of the note
     public let octave: Int
+
+    /// The frequency of the note
     public let frequency: Double
+
+    /// The corresponding wave of the note
     public let wave: AcousticWave
 
+    /// A string description of the note including octave
     public var string: String {
         "\(self.letter.rawValue)\(self.octave)"
     }
 
     // MARK: - Initialization
 
+    /// Initialize a Note from an index
+    /// - Parameter index: The index of the note
+    /// - Throws: An error if the rest of the components cannot be calculated
     public init(index: Int) throws {
         self.index     = index
         letter         = try NoteCalculator.letter(forIndex: index)
@@ -35,6 +49,9 @@ public struct Note {
         wave           = try AcousticWave(frequency: frequency)
     }
 
+    /// Initialize a Note from a frequency
+    /// - Parameter frequency: The frequency of the note
+    /// - Throws: An error if the rest of the components cannot be calculated
     public init(frequency: Double) throws {
         index          = try NoteCalculator.index(forFrequency: frequency)
         letter         = try NoteCalculator.letter(forIndex: index)
@@ -43,6 +60,11 @@ public struct Note {
         wave           = try AcousticWave(frequency: frequency)
     }
 
+    /// Initialize a Note from a Letter & Octave
+    /// - Parameters:
+    ///   - letter: The letter of the note
+    ///   - octave: The octave of the note
+    /// - Throws: An error if the rest of the components cannot be calculated
     public init(letter: Letter, octave: Int) throws {
         self.letter    = letter
         self.octave    = octave
@@ -51,12 +73,18 @@ public struct Note {
         wave           = try AcousticWave(frequency: frequency)
     }
 
-    // MARK: - Closest Notes
+    // MARK: - Neighbor Notes
 
+    /// One semitone lower
+    /// - Throws: An error if the semitone is out of bounds
+    /// - Returns: A note that is one semitone lower
     public func lower() throws -> Note {
         try Note(index: index - 1)
     }
 
+    /// One semitone higher
+    /// - Throws: An error if the semitone is out of bounds
+    /// - Returns: A note that is one semitone higher
     public func higher() throws -> Note {
         try Note(index: index + 1)
     }
