@@ -1,7 +1,7 @@
 public struct Note {
 
     /// The letter of a music note in English Notation
-    public enum Letter: String, CaseIterable {
+    public enum Letter: String, CaseIterable, CustomStringConvertible {
         case C      = "C"
         case CSharp = "C#"
         case D      = "D"
@@ -14,6 +14,8 @@ public struct Note {
         case A      = "A"
         case ASharp = "A#"
         case B      = "B"
+
+        public var description: String { rawValue }
     }
 
     /// The index of the note
@@ -33,7 +35,7 @@ public struct Note {
 
     /// A string description of the note including octave
     public var string: String {
-        "\(self.letter.rawValue)\(self.octave)"
+        "\(self.letter)\(self.octave)"
     }
 
     // MARK: - Initialization
