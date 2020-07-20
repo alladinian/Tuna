@@ -87,15 +87,15 @@ public final class PitchEngine {
 
         case AVAudioSessionRecordPermission.undetermined:
             AVAudioSession.sharedInstance().requestRecordPermission { [weak self] granted  in
-                guard let weakSelf = self else { return }
+                guard let self = self else { return }
 
                 guard granted else {
-                    weakSelf.delegate?.pitchEngine(weakSelf, didReceive: .failure(Error.recordPermissionDenied))
+                    self.delegate?.pitchEngine(self, didReceive: .failure(Error.recordPermissionDenied))
                     return
                 }
 
                 DispatchQueue.main.async {
-                    weakSelf.activate()
+                    self.activate()
                 }
             }
 
