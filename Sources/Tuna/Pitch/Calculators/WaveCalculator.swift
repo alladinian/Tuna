@@ -1,24 +1,24 @@
 public struct WaveCalculator {
 
-    public static var wavelengthBounds: (minimum: Double, maximum: Double) {
+    public static var wavelengthBounds: ClosedRange<Double> {
         let minimum = try! wavelength(forFrequency: FrequencyValidator.maximumFrequency)
         let maximum = try! wavelength(forFrequency: FrequencyValidator.minimumFrequency)
 
-        return (minimum: minimum, maximum: maximum)
+        return minimum ... maximum
     }
 
-    public static var periodBounds: (minimum: Double, maximum: Double) {
+    public static var periodBounds: ClosedRange<Double> {
         let bounds = wavelengthBounds
-        let minimum = try! period(forWavelength: bounds.minimum)
-        let maximum = try! period(forWavelength: bounds.maximum)
+        let minimum = try! period(forWavelength: bounds.lowerBound)
+        let maximum = try! period(forWavelength: bounds.upperBound)
 
-        return (minimum: minimum, maximum: maximum)
+        return minimum ... maximum
     }
 
     // MARK: - Validators
 
     public static func isValid(wavelength: Double) -> Bool {
-        wavelength > 0.0 && (wavelengthBounds.minimum ... wavelengthBounds.maximum) ~= wavelength
+        wavelength > 0.0 && wavelengthBounds.contains(wavelength)
     }
 
     public static func validate(wavelength: Double) throws {
@@ -28,7 +28,7 @@ public struct WaveCalculator {
     }
 
     public static func isValid(period: Double) -> Bool {
-        period > 0.0 && (periodBounds.minimum ... periodBounds.maximum) ~= period
+        period > 0.0 && periodBounds.contains(period)
     }
 
     public static func validate(period: Double) throws {

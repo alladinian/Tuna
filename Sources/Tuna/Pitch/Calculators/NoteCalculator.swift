@@ -24,25 +24,25 @@ public struct NoteCalculator {
 
     // MARK: - Bounds
 
-    public static var indexBounds: (minimum: Int, maximum: Int) {
+    public static var indexBounds: ClosedRange<Int> {
         let minimum = try! index(forFrequency: FrequencyValidator.minimumFrequency)
         let maximum = try! index(forFrequency: FrequencyValidator.maximumFrequency)
 
-        return (minimum: minimum, maximum: maximum)
+        return minimum ... maximum
     }
 
-    public static var octaveBounds: (minimum: Int, maximum: Int) {
+    public static var octaveBounds: ClosedRange<Int> {
         let bounds = indexBounds
-        let minimum = try! octave(forIndex: bounds.minimum)
-        let maximum = try! octave(forIndex: bounds.maximum)
+        let minimum = try! octave(forIndex: bounds.lowerBound)
+        let maximum = try! octave(forIndex: bounds.upperBound)
 
-        return (minimum: minimum, maximum: maximum)
+        return minimum ... maximum
     }
 
     // MARK: - Validators
 
     public static func isValid(index: Int) -> Bool {
-        (indexBounds.minimum ... indexBounds.maximum) ~= index
+        indexBounds.contains(index)
     }
 
     public static func validate(index: Int) throws {
@@ -52,7 +52,7 @@ public struct NoteCalculator {
     }
 
     public static func isValid(octave: Int) -> Bool {
-        (octaveBounds.minimum ... octaveBounds.maximum) ~= octave
+        octaveBounds.contains(octave)
     }
 
     public static func validate(octave: Int) throws {

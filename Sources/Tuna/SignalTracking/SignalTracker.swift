@@ -19,3 +19,4 @@ public protocol SignalTracker: class {
     func start() throws
     func stop()
 }
+ 

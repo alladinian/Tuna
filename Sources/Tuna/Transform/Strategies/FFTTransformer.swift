@@ -1,14 +1,15 @@
 import AVFoundation
 import Accelerate
 
+/// An FFT Transformer
 struct FFTTransformer: Transformer {
 
     func transform(buffer: AVAudioPCMBuffer) throws -> Buffer {
-        let frameCount    = buffer.frameLength
-        let log2n         = UInt(round(log2(Double(frameCount))))
+        let frameCount    = Double(buffer.frameLength)
+        let log2n         = UInt(round(log2(frameCount)))
         let bufferSizePOT = Int(1 << log2n)
         let inputCount    = bufferSizePOT / 2
-        let fftSetup      = vDSP_create_fftsetup(log2n, Int32(kFFTRadix2))
+        let fftSetup      = vDSP_create_fftsetup(log2n, FFTRadix(kFFTRadix2))
 
         var realp = [Float](repeating: 0, count: inputCount)
         var imagp = [Float](repeating: 0, count: inputCount)
@@ -105,6 +106,9 @@ struct FFTTransformer: Transformer {
 
     // MARK: - Helpers
 
+    /// Calculate the square roots of the elements in a [Float]
+    /// - Parameter x: The float array
+    /// - Returns: An array with the square roots
     func sqrtq(_ x: [Float]) -> [Float] {
         var results = [Float](repeating: 0.0, count: x.count)
         vvsqrtf(&results, x, [Int32(x.count)])

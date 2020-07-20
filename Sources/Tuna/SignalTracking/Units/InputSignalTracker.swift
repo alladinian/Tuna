@@ -4,7 +4,7 @@ public enum InputSignalTrackerError: Error {
     case inputNodeMissing
 }
 
-final class InputSignalTracker: SignalTracker {
+class InputSignalTracker: SignalTracker {
     weak var delegate: SignalTrackerDelegate?
     var levelThreshold: Float?
 
@@ -17,14 +17,17 @@ final class InputSignalTracker: SignalTracker {
     #endif
     private let bus = 0
 
+    /// The peak level of the signal
     var peakLevel: Float? {
         audioChannel?.peakHoldLevel
     }
 
+    /// The average level of the signal
     var averageLevel: Float? {
         audioChannel?.averagePowerLevel
     }
 
+    /// The tracker mode
     var mode: SignalTrackerMode {
         .record
     }
@@ -117,3 +120,24 @@ final class InputSignalTracker: SignalTracker {
         }
     }
 }
+
+#if canImport(Combine)
+import Combine
+
+@available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+class SignalTrackerPublisher {
+    let subject = PassthroughSubject<(AVAudioPCMBuffer, AVAudioTime), Error>()
+}
+
+@available(OSX 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0, *)
+extension SignalTrackerPublisher: SignalTrackerDelegate {
+    func signalTracker(_ signalTracker: SignalTracker, didReceiveBuffer buffer: AVAudioPCMBuffer, atTime time: AVAudioTime) {
+        subject.send((buffer, time))
+    }
+
+    func signalTrackerWentBelowLevelThreshold(_ signalTracker: SignalTracker) {
+
+    }
+}
+
+#endif

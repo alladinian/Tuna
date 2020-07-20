@@ -19,7 +19,7 @@ final class OutputSignalTracker: SignalTracker {
     }
 
     var mode: SignalTrackerMode {
-        return .playback
+        .playback
     }
 
     // MARK: - Initialization

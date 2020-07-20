@@ -39,8 +39,8 @@ final class PitchyTests: XCTestCase {
             let expected = (minimum: minimum, maximum: maximum)
             let result   = NoteCalculator.indexBounds
 
-            XCTAssertEqual(result.minimum, expected.minimum)
-            XCTAssertEqual(result.maximum, expected.maximum)
+            XCTAssertEqual(result.lowerBound, expected.minimum)
+            XCTAssertEqual(result.upperBound, expected.maximum)
         }
 
         indexBounds()
@@ -48,13 +48,13 @@ final class PitchyTests: XCTestCase {
         func octaveBounds() {
             // Bounds based on min and max frequencies from the config
             let bounds   = NoteCalculator.indexBounds
-            let minimum  = try! NoteCalculator.octave(forIndex: bounds.minimum)
-            let maximum  = try! NoteCalculator.octave(forIndex: bounds.maximum)
+            let minimum  = try! NoteCalculator.octave(forIndex: bounds.lowerBound)
+            let maximum  = try! NoteCalculator.octave(forIndex: bounds.upperBound)
             let expected = (minimum: minimum, maximum: maximum)
             let result   = NoteCalculator.octaveBounds
 
-            XCTAssertEqual(result.minimum, expected.minimum)
-            XCTAssertEqual(result.maximum, expected.maximum)
+            XCTAssertEqual(result.lowerBound, expected.minimum)
+            XCTAssertEqual(result.upperBound, expected.maximum)
         }
 
         octaveBounds()
@@ -145,8 +145,8 @@ final class PitchyTests: XCTestCase {
             let expected = (minimum: minimum, maximum: maximum)
             let result = WaveCalculator.wavelengthBounds
 
-            XCTAssertEqual(result.minimum, expected.minimum)
-            XCTAssertEqual(result.maximum, expected.maximum)
+            XCTAssertEqual(result.lowerBound, expected.minimum)
+            XCTAssertEqual(result.upperBound, expected.maximum)
         }
 
         indexBounds()
@@ -154,13 +154,13 @@ final class PitchyTests: XCTestCase {
         func octaveBounds() {
             // Bounds based on min and max frequencies from the config
             let bounds = WaveCalculator.wavelengthBounds
-            let minimum = try! WaveCalculator.period(forWavelength: bounds.minimum)
-            let maximum = try! WaveCalculator.period(forWavelength: bounds.maximum)
+            let minimum = try! WaveCalculator.period(forWavelength: bounds.lowerBound)
+            let maximum = try! WaveCalculator.period(forWavelength: bounds.upperBound)
             let expected = (minimum: minimum, maximum: maximum)
             let result = WaveCalculator.periodBounds
 
-            XCTAssertEqual(result.minimum, expected.minimum)
-            XCTAssertEqual(result.maximum, expected.maximum)
+            XCTAssertEqual(result.lowerBound, expected.minimum)
+            XCTAssertEqual(result.upperBound, expected.maximum)
         }
 
         octaveBounds()
