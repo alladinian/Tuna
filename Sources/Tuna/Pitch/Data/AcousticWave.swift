@@ -12,7 +12,7 @@ public struct AcousticWave {
     /// The period of the wave
     public let period: Double
 
-    /// 16 harmonic pitches
+    /// Up to 16 harmonic pitches
     public var harmonics: [Pitch] {
         var pitches = [Pitch]()
 

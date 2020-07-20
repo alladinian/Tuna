@@ -6,8 +6,7 @@ import UIKit
 #endif
 
 public protocol PitchEngineDelegate: class {
-    func pitchEngine(_ pitchEngine: PitchEngine, didReceivePitch pitch: Pitch)
-    func pitchEngine(_ pitchEngine: PitchEngine, didReceiveError error: Error)
+    func pitchEngine(_ pitchEngine: PitchEngine, didReceive result: Result<Pitch, Error>)
     func pitchEngineWentBelowLevelThreshold(_ pitchEngine: PitchEngine)
 }
 
@@ -91,8 +90,7 @@ public final class PitchEngine {
                 guard let weakSelf = self else { return }
 
                 guard granted else {
-                    weakSelf.delegate?.pitchEngine(weakSelf,
-                                                   didReceiveError: Error.recordPermissionDenied)
+                    weakSelf.delegate?.pitchEngine(weakSelf, didReceive: .failure(Error.recordPermissionDenied))
                     return
                 }
 
@@ -117,7 +115,7 @@ public final class PitchEngine {
             try signalTracker.start()
             active = true
         } catch {
-            delegate?.pitchEngine(self, didReceiveError: error)
+            delegate?.pitchEngine(self, didReceive: .failure(error))
         }
     }
 }
@@ -137,12 +135,12 @@ extension PitchEngine: SignalTrackerDelegate {
 
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
-                    self.delegate?.pitchEngine(self, didReceivePitch: pitch)
+                    self.delegate?.pitchEngine(self, didReceive: .success(pitch))
                 }
             } catch {
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
-                    self.delegate?.pitchEngine(self, didReceiveError: error)
+                    self.delegate?.pitchEngine(self, didReceive: .failure(error))
                 }
             }
         }
