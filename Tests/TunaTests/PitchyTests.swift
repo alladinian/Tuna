@@ -122,7 +122,7 @@ final class PitchyTests: XCTestCase {
             XCTAssertEqual(result.higher.note.index, offset.higher.note.index)
             XCTAssertTrue(result.higher.cents ≈ (offset.higher.cents, 0.1))
 
-            XCTAssertEqual(result.closest.note.string, offset.closest)
+            XCTAssertEqual(result.closest.note.description, offset.closest)
         }
     }
 
@@ -300,9 +300,9 @@ final class PitchyTests: XCTestCase {
             XCTAssertEqual(note.octave, $0.octave)
             XCTAssertTrue(note.frequency ≈ ($0.frequency, 0.01))
             XCTAssertTrue(note.wave.frequency ≈ ($0.frequency, 0.01))
-            XCTAssertEqual(note.string, $0.string)
-            XCTAssertEqual(try! note.lower().string, $0.lower)
-            XCTAssertEqual(try! note.higher().string, $0.higher)
+            XCTAssertEqual(note.description, $0.string)
+            XCTAssertEqual(try! note.lower().description, $0.lower)
+            XCTAssertEqual(try! note.higher().description, $0.higher)
         }
 
         // Frequency
@@ -315,9 +315,9 @@ final class PitchyTests: XCTestCase {
             XCTAssertEqual(note.octave, $0.octave)
             XCTAssertTrue(note.frequency ≈ ($0.frequency, 0.01))
             XCTAssertTrue(note.wave.frequency ≈ ($0.frequency, 0.01))
-            XCTAssertEqual(note.string, $0.string)
-            XCTAssertEqual(try! note.lower().string, $0.lower)
-            XCTAssertEqual(try! note.higher().string, $0.higher)
+            XCTAssertEqual(note.description, $0.string)
+            XCTAssertEqual(try! note.lower().description, $0.lower)
+            XCTAssertEqual(try! note.higher().description, $0.higher)
         }
 
         // Letter & Octave
@@ -330,9 +330,9 @@ final class PitchyTests: XCTestCase {
             XCTAssertEqual(note.octave, $0.octave)
             XCTAssertTrue(note.frequency ≈ ($0.frequency, 0.01))
             XCTAssertTrue(note.wave.frequency ≈ ($0.frequency, 0.01))
-            XCTAssertEqual(note.string, $0.string)
-            XCTAssertEqual(try! note.lower().string, $0.lower)
-            XCTAssertEqual(try! note.higher().string, $0.higher)
+            XCTAssertEqual(note.description, $0.string)
+            XCTAssertEqual(try! note.lower().description, $0.lower)
+            XCTAssertEqual(try! note.higher().description, $0.higher)
         }
     }
 
@@ -382,7 +382,7 @@ final class PitchyTests: XCTestCase {
             XCTAssertEqual(result.higher.note.index, $0.higher.note.index)
             XCTAssertTrue(result.higher.cents ≈ ($0.higher.cents, 0.01))
 
-            XCTAssertEqual(result.closest.note.string, $0.closest)
+            XCTAssertEqual(result.closest.note.description, $0.closest)
         }
     }
 

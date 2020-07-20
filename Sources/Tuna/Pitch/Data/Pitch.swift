@@ -14,8 +14,7 @@ public struct Pitch {
 
         /// The closest offset
         public var closest: Pitch.Offset {
-            return abs(lower.frequency) < abs(higher.frequency)
-                ? lower : higher
+            abs(lower.frequency) < abs(higher.frequency) ? lower : higher
         }
 
         // MARK: - Initialization
@@ -26,8 +25,8 @@ public struct Pitch {
         ///   - second: The second offset
         public init(_ first: Offset, _ second: Offset) {
             let lowerFirst = first.note.frequency < second.note.frequency
-            self.lower = lowerFirst ? first : second
-            self.higher = lowerFirst ? second : first
+            self.lower     = lowerFirst ? first : second
+            self.higher    = lowerFirst ? second : first
         }
     }
 

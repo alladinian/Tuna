@@ -1,4 +1,4 @@
-public struct Note {
+public struct Note: CustomStringConvertible {
 
     /// The letter of a music note in English Notation
     public enum Letter: String, CaseIterable, CustomStringConvertible {
@@ -33,8 +33,8 @@ public struct Note {
     /// The corresponding wave of the note
     public let wave: AcousticWave
 
-    /// A string description of the note including octave
-    public var string: String {
+    /// A string description of the note including octave (eg A4)
+    public var description: String {
         "\(self.letter)\(self.octave)"
     }
 
