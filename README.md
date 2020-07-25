@@ -17,6 +17,14 @@ This project is based on [Beethoven](https://github.com/vadymmarkov/Beethoven) &
 - Convert a frequency to wavelength and vice versa.
 - Convert a wavelength to time period and vice versa.
 
+## Index
+* [Pitch](#pitch)
+* [Acoustic wave](#acoustic-wave)
+* [Note](#note)
+* [Calculators](#calculators)
+* [FrequencyValidator](#frequencyvalidator)
+* [Error handling](#error-handling)
+
 
 ### Pitch
 Create `Pitch` struct with a specified frequency to get lower, higher and
