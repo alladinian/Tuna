@@ -154,6 +154,8 @@ enum PitchError: Error {
 }
 ```
 
+---
+
 ### Pitch engine
 
 `PitchEngine` is the main class you are going to work with to find the pitch.
@@ -199,6 +201,14 @@ estimationStrategy: EstimationStrategy = .yin
 audioUrl: URL? = nil
 signalTracker: SignalTracker? = nil
 ```
+
+`PitchEngineDelegate` have a single requirement and reports back a `Result` (just like the callback):
+
+```swift
+func pitchEngine(_ pitchEngine: PitchEngine, didReceive result: Result<Pitch, Error>)
+```
+
+It should be noted that both reporting mechanisms are conveniently called in the main queue, since you probably want to update your UI most of the time.
 
 ## Authors
 
