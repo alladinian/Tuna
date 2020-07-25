@@ -78,12 +78,12 @@ do {
   // Note(letter: .C, octave: 4)
   let note = try Note(index: -9)
 
-  print(note.index)				    // -9
-  print(note.letter)				  // .C
-  print(note.octave)			  	// 4
-  print(note.frequency)		  	// 261.626 Hz
-  print(note)						      // "C4"
-  print(try note.lower())		  // "B3"
+  print(note.index)           // -9
+  print(note.letter)          // .C
+  print(note.octave)          // 4
+  print(note.frequency)       // 261.626 Hz
+  print(note)                 // "C4"
+  print(try note.lower())     // "B3"
   print(try note.higher())    // "C#4"
 } catch {
   // Handle errors
