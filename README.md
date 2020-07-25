@@ -208,6 +208,17 @@ signalTracker: SignalTracker? = nil
 func pitchEngine(_ pitchEngine: PitchEngine, didReceive result: Result<Pitch, Error>)
 ```
 
+For reference the full init signature is:
+
+```swift
+public init(bufferSize: AVAudioFrameCount = 4096,
+            estimationStrategy: EstimationStrategy = .yin,
+            audioUrl: URL? = nil,
+            signalTracker: SignalTracker? = nil,
+            delegate: PitchEngineDelegate? = nil,
+            callback: PitchEngineCallback? = nil)
+```
+
 It should be noted that both reporting mechanisms are conveniently called in the main queue, since you probably want to update your UI most of the time.
 
 ## Authors
