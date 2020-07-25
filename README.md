@@ -20,13 +20,26 @@ This project is based on [Beethoven](https://github.com/vadymmarkov/Beethoven) &
 - Convert a wavelength to time period and vice versa.
 
 ## Index
-* [Pitch](#pitch)
-* [Acoustic wave](#acoustic-wave)
-* [Note](#note)
-* [Calculators](#calculators)
-* [FrequencyValidator](#frequencyvalidator)
-* [Error handling](#error-handling)
+Pitch:
+    * [Pitch](#pitch)
+    * [Acoustic wave](#acoustic-wave)
+    * [Note](#note)
+    * [Calculators](#calculators)
+    * [FrequencyValidator](#frequencyvalidator)
+    * [Error handling](#pitch-error-handling)
+    
+PitchEngine:
+    * [Pitch engine](#pitch-engine)
+    * [Signal tracking](#signal-tracking)
+    * [Transform](#transform)
+    * [Estimation](#estimation)
+    * [Error handling](#pitch-engine-error-handling)
+    * [Pitch detection specifics](#pitch-detection-specifics)
 
+* [Authors](#authors)
+* [License](#license)
+
+---
 
 ### Pitch
 Create `Pitch` struct with a specified frequency to get lower, higher and
@@ -102,7 +115,6 @@ do {
 
 
 ### Calculators
-
 Calculators are used in the initialization of `Pitch`, `AcousticWave`
 and `Note`, but also are included in the public API.
 
@@ -131,7 +143,6 @@ do {
 
 
 ### FrequencyValidator
-
 With a help of `FrequencyValidator` it's possible to adjust the range of frequencies that are used for validations in all calculations:
 
 ```swift
@@ -139,8 +150,7 @@ FrequencyValidator.range = 20.0 ... 4190.0      // This btw is the default range
 ```
 
 
-### Error handling
-
+### Pitch error handling
 Almost everything is covered with tests, but it's important to pass valid
 values, such as frequencies and pitch indexes. That's why there is a list of errors that should be handled properly.
 
@@ -157,7 +167,6 @@ enum PitchError: Error {
 ---
 
 ### Pitch engine
-
 `PitchEngine` is the main class you are going to work with to find the pitch.
 It can be instantiated with a delegate, a closure callback or both:
 
@@ -221,8 +230,7 @@ public init(bufferSize: AVAudioFrameCount = 4096,
 
 It should be noted that both reporting mechanisms are conveniently called in the main queue, since you probably want to update your UI most of the time.
 
-To start or stop the pitch tracking process just use the corresponding
-`PitchEngine` methods:
+To start or stop the pitch tracking process just use the corresponding `PitchEngine` methods:
 
 ```swift
 pitchEngine.start()
@@ -235,6 +243,7 @@ There are 2 signal tracking classes:
 recording input (microphone) in real-time.
 - `OutputSignalTracker` uses `AVAudioOutputNode` and `AVAudioFile` to play an
 audio file and get the audio buffer from the playback output.
+
 
 ### Transform
 Transform is the first step of audio processing where `AVAudioPCMBuffer` object
@@ -253,7 +262,7 @@ protocol:
 
 ```swift
 public protocol Transformer {
-  func transform(buffer: AVAudioPCMBuffer) -> Buffer
+    func transform(buffer: AVAudioPCMBuffer) -> Buffer
 }
 ```
 
@@ -278,14 +287,14 @@ or `LocationEstimator` protocol:
 
 ```swift
 protocol Estimator {
-  var transformer: Transformer { get }
+    var transformer: Transformer { get }
 
-  func estimateFrequency(sampleRate: Float, buffer: Buffer) throws -> Float
-  func estimateFrequency(sampleRate: Float, location: Int, bufferCount: Int) -> Float
+    func estimateFrequency(sampleRate: Float, buffer: Buffer) throws -> Float
+    func estimateFrequency(sampleRate: Float, location: Int, bufferCount: Int) -> Float
 }
 
 protocol LocationEstimator: Estimator {
-  func estimateLocation(buffer: Buffer) throws -> Int
+    func estimateLocation(buffer: Buffer) throws -> Int
 }
 ```
 
@@ -294,7 +303,8 @@ of `EstimationFactory` struct. Normally, a buffer transformation should be
 performed in a separate struct or class to keep the code base more clean and
 readable.
 
-### Error handling
+
+### Pitch Engine error handling
 Pitch detection is not a trivial task due to some difficulties, such as attack
 transients, low and high frequencies. Also it's a real-time processing, so we
 are not protected against different kinds of errors. For this purpose there is a
@@ -304,18 +314,17 @@ range of error types that should be handled properly.
 
 ```swift
 public enum InputSignalTrackerError: Error {
-  case inputNodeMissing
+    case inputNodeMissing
 }
 ```
 
 **Record permission errors**
 
-`PitchEngine` asks for `AVAudioSessionRecordPermission` on start, but if
-permission is denied it produces the corresponding error:
+`PitchEngine` asks for `AVAudioSessionRecordPermission` on start, but if permission is denied it produces the corresponding error:
 
 ```swift
 public enum PitchEngineError: Error {
-  case recordPermissionDenied
+    case recordPermissionDenied
 }
 ```
 
@@ -325,17 +334,15 @@ Some errors could occur during the process of pitch estimation:
 
 ```swift
 public enum EstimationError: Error {
-  case emptyBuffer
-  case unknownMaxIndex
-  case unknownLocation
-  case unknownFrequency
+    case emptyBuffer
+    case unknownMaxIndex
+    case unknownLocation
+    case unknownFrequency
 }
 ```
 
 ## Pitch detection specifics
-
-At the moment **Tuna** performs only a pitch detection of a monophonic
-recording.
+At the moment **Tuna** performs only a pitch detection of a monophonic recording.
 
 **Based on Stackoverflow** [answer](http://stackoverflow.com/a/14503090):
 
@@ -353,9 +360,7 @@ recording.
 > research problem.
 
 ## Authors
-
 Vasilis Akoinoglou, alladinian@gmail.com
-
 Credit to original Author: Vadym Markov, markov.vadym@gmail.com
 
 ## License
