@@ -221,6 +221,137 @@ public init(bufferSize: AVAudioFrameCount = 4096,
 
 It should be noted that both reporting mechanisms are conveniently called in the main queue, since you probably want to update your UI most of the time.
 
+To start or stop the pitch tracking process just use the corresponding
+`PitchEngine` methods:
+
+```swift
+pitchEngine.start()
+pitchEngine.stop()
+```
+
+### Signal tracking
+There are 2 signal tracking classes:
+- `InputSignalTracker` uses `AVAudioInputNode` to get an audio buffer from the
+recording input (microphone) in real-time.
+- `OutputSignalTracker` uses `AVAudioOutputNode` and `AVAudioFile` to play an
+audio file and get the audio buffer from the playback output.
+
+### Transform
+Transform is the first step of audio processing where `AVAudioPCMBuffer` object
+is converted to an array of floating numbers. Also it's a place for different
+kind of optimizations. Then array is kept in the `elements` property of the
+internal `Buffer` struct, which also has optional `realElements` and
+`imagElements` properties that could be useful in the further calculations.
+
+There are 3 types of transformations at the moment:
+- [Fast Fourier transform](https://en.wikipedia.org/wiki/Fast_Fourier_transform)
+- [YIN](http://recherche.ircam.fr/equipes/pcm/cheveign/pss/2002_JASA_YIN.pdf)
+- `Simple` conversion to use raw float channel data
+
+A new transform strategy could be easily added by implementing of `Transformer`
+protocol:
+
+```swift
+public protocol Transformer {
+  func transform(buffer: AVAudioPCMBuffer) -> Buffer
+}
+```
+
+### Estimation
+A pitch detection algorithm (PDA) is an algorithm designed to estimate the pitch
+or fundamental frequency. Pitch is a psycho-acoustic phenomena, and it's
+important to choose the most suitable algorithm for your kind of input source,
+considering allowable error rate and needed performance.
+
+The list of available implemented algorithms:
+- `maxValue` - the index of the maximum value in the audio buffer used as a peak
+- `quadradic` - [Quadratic interpolation of spectral peaks](https://ccrma.stanford.edu/%7Ejos/sasp/Quadratic_Interpolation_Spectral_Peaks.html)
+- `barycentric` - [Barycentric correction](http://www.dspguru.com/dsp/howtos/how-to-interpolate-fft-peak)
+- `quinnsFirst` - [Quinn's First Estimator](http://www.dspguru.com/dsp/howtos/how-to-interpolate-fft-peak)
+- `quinnsSecond` - [Quinn's Second Estimator](http://www.dspguru.com/dsp/howtos/how-to-interpolate-fft-peak)
+- `jains` - [Jain's Method](http://www.dspguru.com/dsp/howtos/how-to-interpolate-fft-peak)
+- `hps` - [Harmonic Product Spectrum](http://musicweb.ucsd.edu/~trsmyth/analysis/Harmonic_Product_Spectrum.html)
+- `yin` - [YIN](http://recherche.ircam.fr/equipes/pcm/cheveign/pss/2002_JASA_YIN.pdf)
+
+A new estimation algorithm could be easily added by implementing of `Estimator`
+or `LocationEstimator` protocol:
+
+```swift
+protocol Estimator {
+  var transformer: Transformer { get }
+
+  func estimateFrequency(sampleRate: Float, buffer: Buffer) throws -> Float
+  func estimateFrequency(sampleRate: Float, location: Int, bufferCount: Int) -> Float
+}
+
+protocol LocationEstimator: Estimator {
+  func estimateLocation(buffer: Buffer) throws -> Int
+}
+```
+
+Then it should be added to `EstimationStrategy` enum and in the `create` method
+of `EstimationFactory` struct. Normally, a buffer transformation should be
+performed in a separate struct or class to keep the code base more clean and
+readable.
+
+### Error handling
+Pitch detection is not a trivial task due to some difficulties, such as attack
+transients, low and high frequencies. Also it's a real-time processing, so we
+are not protected against different kinds of errors. For this purpose there is a
+range of error types that should be handled properly.
+
+**Signal tracking errors**
+
+```swift
+public enum InputSignalTrackerError: Error {
+  case inputNodeMissing
+}
+```
+
+**Record permission errors**
+
+`PitchEngine` asks for `AVAudioSessionRecordPermission` on start, but if
+permission is denied it produces the corresponding error:
+
+```swift
+public enum PitchEngineError: Error {
+  case recordPermissionDenied
+}
+```
+
+**Pitch estimation errors**
+
+Some errors could occur during the process of pitch estimation:
+
+```swift
+public enum EstimationError: Error {
+  case emptyBuffer
+  case unknownMaxIndex
+  case unknownLocation
+  case unknownFrequency
+}
+```
+
+## Pitch detection specifics
+
+At the moment **Tuna** performs only a pitch detection of a monophonic
+recording.
+
+**Based on Stackoverflow** [answer](http://stackoverflow.com/a/14503090):
+
+> Pitch detection depends greatly on the musical content you want to work with.
+> Extracting the pitch of a monophonic recording (i.e. single instrument or voice)
+> is not the same as extracting the pitch of a single instrument from a polyphonic
+> mixture (e.g. extracting the pitch of the melody from a polyphonic recording).
+
+> For monophonic pitch extraction there are various algorithm that could be
+> implemented both in the time domain and frequency domain
+> ([Wikipedia](https://en.wikipedia.org/wiki/Pitch_detection_algorithm)).
+
+> However, neither will work well if you want to extract the melody from
+> polyphonic material. Melody extraction from polyphonic music is still a
+> research problem.
+
 ## Authors
 
 Vasilis Akoinoglou, alladinian@gmail.com
