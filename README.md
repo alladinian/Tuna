@@ -98,27 +98,28 @@ and `Note`, but also are included in the public API.
 
 ```swift
 do {
-  // PitchCalculator
-  let pitchOffsets = try PitchCalculator.offsets(445.0)
-  let cents = try PitchCalculator.cents(
-    frequency1: 440.0,
-    frequency2: 440.0
-  ) // 19.56
 
-  // NoteCalculator
-  let frequency1 = try NoteCalculator.frequency(forIndex: 0)       // 440.0 Hz
-  let letter = try NoteCalculator.letter(forIndex: 0)              // .A
-  let octave = try NoteCalculator.octave(forIndex: 0)              // 4
-  let index1 = try NoteCalculator.index(forFrequency: 440.0)       // 0
-  let index2 = try NoteCalculator.index(forLetter: .A, octave: 4)  // 0
+    // PitchCalculator
+    let pitchOffsets = try PitchCalculator.offsets(445.0)
+    let cents        = try PitchCalculator.cents(frequency1: 440.0, frequency2: 440.0)  // 19.56
 
-  // WaveCalculator
-  let f = try WaveCalculator.frequency(forWavelength: 0.7795)      // 440.0 Hz
-  let wl1 = try WaveCalculator.wavelength(forFrequency: 440.0)     // 0.7795 meters
-  let wl2 = try WaveCalculator.wavelength(forPeriod: 0.00227259)   // 0.7795 meters
-  let period = try WaveCalculator.period(forWavelength: 0.7795)    // 0.00227259 s
+    // NoteCalculator
+    let frequency1   = try NoteCalculator.frequency(forIndex: 0)                        // 440.0 Hz
+    let letter       = try NoteCalculator.letter(forIndex: 0)                           // .A
+    let octave       = try NoteCalculator.octave(forIndex: 0)                           // 4
+    let index1       = try NoteCalculator.index(forFrequency: 440.0)                    // 0
+    let index2       = try NoteCalculator.index(forLetter: .A, octave: 4)               // 0
+
+    // WaveCalculator
+    let f            = try WaveCalculator.frequency(forWavelength: 0.7795)              // 440.0 Hz
+    let wl1          = try WaveCalculator.wavelength(forFrequency: 440.0)               // 0.7795 meters
+    let wl2          = try WaveCalculator.wavelength(forPeriod: 0.00227259)             // 0.7795 meters
+    let period       = try WaveCalculator.period(forWavelength: 0.7795)                 // 0.00227259 s
+
 } catch {
-  // Handle errors
+
+    // Handle errors
+
 }
 ```
 
@@ -128,7 +129,7 @@ do {
 With a help of `FrequencyValidator` it's possible to adjust the range of frequencies that are used for validations in all calculations:
 
 ```swift
-FrequencyValidator.range = 20.0 ... 4190.0 // This btw is the default range
+FrequencyValidator.range = 20.0 ... 4190.0      // This btw is the default range
 ```
 
 
@@ -139,11 +140,11 @@ values, such as frequencies and pitch indexes. That's why there is a list of err
 
 ```swift
 enum PitchError: Error {
-  case invalidFrequency
-  case invalidWavelength
-  case invalidPeriod
-  case invalidPitchIndex
-  case invalidOctave
+    case invalidFrequency
+    case invalidWavelength
+    case invalidPeriod
+    case invalidPitchIndex
+    case invalidOctave
 }
 ```
 
