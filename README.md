@@ -128,7 +128,7 @@ do {
 With a help of `FrequencyValidator` it's possible to adjust the range of frequencies that are used for validations in all calculations:
 
 ```swift
-FrequencyValidator.range = 20.0 ... 4190.0
+FrequencyValidator.range = 20.0 ... 4190.0 // This btw is the default range
 ```
 
 
