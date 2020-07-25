@@ -24,26 +24,26 @@ closest pitch offsets:
 
 ```swift
 do {
-  // Frequency = 445 Hz
-  let pitch = try Pitch(frequency: 445.0)
-  let pitchOffsets = pitch.offsets
+    // Frequency = 445 Hz
+    let pitch = try Pitch(frequency: 445.0)
+    let pitchOffsets = pitch.offsets
 
-  print(pitchOffsets.lower.frequency)     // 5 Hz
-  print(pitchOffsets.lower.percentage)    // 19.1%
-  print(pitchOffsets.lower.note.index)    // 0
-  print(pitchOffsets.lower.cents)         // 19.56
+    print(pitchOffsets.lower.frequency)     // 5 Hz
+    print(pitchOffsets.lower.percentage)    // 19.1%
+    print(pitchOffsets.lower.note.index)    // 0
+    print(pitchOffsets.lower.cents)         // 19.56
 
-  print(pitchOffsets.higher.frequency)    // -21.164 Hz
-  print(pitchOffsets.higher.percentage)   // -80.9%
-  print(pitchOffsets.higher.note.index)   // 1
-  print(pitchOffsets.higher.cents)        // -80.4338
+    print(pitchOffsets.higher.frequency)    // -21.164 Hz
+    print(pitchOffsets.higher.percentage)   // -80.9%
+    print(pitchOffsets.higher.note.index)   // 1
+    print(pitchOffsets.higher.cents)        // -80.4338
 
-  print(pitchOffsets.closest.note)        // "A4"
+    print(pitchOffsets.closest.note)        // "A4"
 
-  // You could also use acoustic wave
-  print(pitch.wave.wavelength)            // 0.7795 meters
+    // You could also use acoustic wave
+    print(pitch.wave.wavelength)            // 0.7795 meters
 } catch {
-  // Handle errors
+    // Handle errors
 }
 ```
 
@@ -53,17 +53,17 @@ Get an acoustic wave with wavelength, period and harmonics.
 
 ```swift
 do {
-  // AcousticWave(wavelength: 0.7795)
-  // AcousticWave(period: 0.00227259)
-  let wave = try AcousticWave(frequency: 440.0)
+    // AcousticWave(wavelength: 0.7795)
+    // AcousticWave(period: 0.00227259)
+    let wave = try AcousticWave(frequency: 440.0)
 
-  print(wave.frequency)       // 440 Hz
-  print(wave.wavelength)      // 0.7795 meters
-  print(wave.period)          // 0.00227259 s
-  print(wave.harmonics[0])    // 440 Hz
-  print(wave.harmonics[1])    // 880 Hz
+    print(wave.frequency)       // 440 Hz
+    print(wave.wavelength)      // 0.7795 meters
+    print(wave.period)          // 0.00227259 s
+    print(wave.harmonics[0])    // 440 Hz
+    print(wave.harmonics[1])    // 880 Hz
 } catch {
-  // Handle errors
+    // Handle errors
 }
 ```
 
