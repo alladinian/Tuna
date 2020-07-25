@@ -154,6 +154,51 @@ enum PitchError: Error {
 }
 ```
 
+### Pitch engine
+
+`PitchEngine` is the main class you are going to work with to find the pitch.
+It can be instantiated with a delegate, a closure callback or both:
+
+```swift
+let pitchEngine = PitchEngine(delegate: delegate)
+```
+
+or 
+
+```swift
+let pitchEngine = PitchEngine { result in
+
+    switch result {
+    case .success(let pitch):
+        // Handle the reported pitch
+        
+    case .failure(let error):
+        // Handle the error
+        
+        switch error {
+        case PitchEngine.Error.levelBelowThreshold: break
+        case PitchEngine.Error.recordPermissionDenied: break
+        
+        case PitchError.invalidFrequency: break
+        case PitchError.invalidWavelength: break
+        case PitchError.invalidPeriod: break
+        case PitchError.invalidPitchIndex: break
+        case PitchError.invalidOctave: break
+        default: break
+        }
+    }
+
+}
+```
+
+the initializers have also the following optional parameters:
+
+```swift
+bufferSize: AVAudioFrameCount = 4096
+estimationStrategy: EstimationStrategy = .yin
+audioUrl: URL? = nil
+signalTracker: SignalTracker? = nil
+```
 
 ## Authors
 
