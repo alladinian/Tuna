@@ -10,7 +10,13 @@ public protocol PitchEngineDelegate: class {
     func pitchEngineWentBelowLevelThreshold(_ pitchEngine: PitchEngine)
 }
 
-public final class PitchEngine {
+public typealias PitchEngineCallback = (Result<Pitch, Error>) -> Void
+
+public enum PitchEngineError: Error {
+    case belowThreshold
+}
+
+public class PitchEngine {
 
     public enum Error: Swift.Error {
         case recordPermissionDenied
@@ -19,6 +25,7 @@ public final class PitchEngine {
     public let bufferSize: AVAudioFrameCount
     public private(set) var active = false
     public weak var delegate: PitchEngineDelegate?
+    private var callback: PitchEngineCallback?
 
     private let estimator: Estimator
     private let signalTracker: SignalTracker
@@ -43,7 +50,7 @@ public final class PitchEngine {
 
     // MARK: - Initialization
 
-    public init(bufferSize: AVAudioFrameCount = 4096, estimationStrategy: EstimationStrategy = .yin, audioUrl: URL? = nil, signalTracker: SignalTracker? = nil, delegate: PitchEngineDelegate? = nil) {
+    public init(bufferSize: AVAudioFrameCount = 4096, estimationStrategy: EstimationStrategy = .yin, audioUrl: URL? = nil, signalTracker: SignalTracker? = nil, delegate: PitchEngineDelegate? = nil, callback: PitchEngineCallback? = nil) {
         self.bufferSize = bufferSize
         self.estimator  = estimationStrategy.estimator
 
@@ -59,6 +66,7 @@ public final class PitchEngine {
 
         self.signalTracker.delegate = self
         self.delegate               = delegate
+        self.callback               = callback
     }
 
     // MARK: - Processing
@@ -86,11 +94,12 @@ public final class PitchEngine {
             }
 
         case AVAudioSessionRecordPermission.undetermined:
-            AVAudioSession.sharedInstance().requestRecordPermission { [weak self] granted  in
+            AVAudioSession.sharedInstance().requestRecordPermission { [weak self] granted in
                 guard let self = self else { return }
 
                 guard granted else {
                     self.delegate?.pitchEngine(self, didReceive: .failure(Error.recordPermissionDenied))
+                    self.callback?(.failure(Error.recordPermissionDenied))
                     return
                 }
 
@@ -116,6 +125,7 @@ public final class PitchEngine {
             active = true
         } catch {
             delegate?.pitchEngine(self, didReceive: .failure(error))
+            callback?(.failure(error))
         }
     }
 }
@@ -136,11 +146,13 @@ extension PitchEngine: SignalTrackerDelegate {
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
                     self.delegate?.pitchEngine(self, didReceive: .success(pitch))
+                    self.callback?(.success(pitch))
                 }
             } catch {
                 DispatchQueue.main.async { [weak self] in
                     guard let self = self else { return }
                     self.delegate?.pitchEngine(self, didReceive: .failure(error))
+                    self.callback?(.failure(error))
                 }
             }
         }
@@ -149,6 +161,7 @@ extension PitchEngine: SignalTrackerDelegate {
     public func signalTrackerWentBelowLevelThreshold(_ signalTracker: SignalTracker) {
         DispatchQueue.main.async {
             self.delegate?.pitchEngineWentBelowLevelThreshold(self)
+            self.callback?(.failure(PitchEngineError.belowThreshold))
         }
     }
 
