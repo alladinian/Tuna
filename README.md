@@ -78,13 +78,13 @@ do {
   // Note(letter: .C, octave: 4)
   let note = try Note(index: -9)
 
-  print(note.index)				// -9
-  print(note.letter)				// .C
-  print(note.octave)				// 4
-  print(note.frequency)			// 261.626 Hz
-  print(note)						// "C4"
-  print(try note.lower())		// "B3"
-  print(try note.higher())		// "C#4"
+  print(note.index)				    // -9
+  print(note.letter)				  // .C
+  print(note.octave)			  	// 4
+  print(note.frequency)		  	// 261.626 Hz
+  print(note)						      // "C4"
+  print(try note.lower())		  // "B3"
+  print(try note.higher())    // "C#4"
 } catch {
   // Handle errors
 }
@@ -125,12 +125,10 @@ do {
 
 ### FrequencyValidator
 
-With a help of `FrequencyValidator` it's possible to adjust minimum and
-maximum frequencies that are used for validations in all calculations:
+With a help of `FrequencyValidator` it's possible to adjust the range of frequencies that are used for validations in all calculations:
 
 ```swift
-FrequencyValidator.minimumFrequency = 20.0
-FrequencyValidator.maximumFrequency = 4190.0
+FrequencyValidator.range = 20.0 ... 4190.0
 ```
 
 
