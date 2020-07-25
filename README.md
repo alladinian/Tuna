@@ -14,13 +14,6 @@ This project is based on [Beethoven](https://github.com/vadymmarkov/Beethoven) &
 - Calculate a frequency, note letter and octave from a pitch index
 - Find a pitch index from a specified frequency or a note letter with octave.
 - Convert a frequency to wavelength and vice versa.
-- Convert a wavelength to time period and vice versa.## Key features
-- Get lower, higher and closest pitch offsets from a specified frequency.
-- Get an acoustic wave with wavelength, period and harmonics.
-- Create a note from a pitch index, frequency or a letter with octave number.
-- Calculate a frequency, note letter and octave from a pitch index
-- Find a pitch index from a specified frequency or a note letter with octave.
-- Convert a frequency to wavelength and vice versa.
 - Convert a wavelength to time period and vice versa.
 
 
