@@ -23,23 +23,21 @@ This project is based on [Beethoven](https://github.com/vadymmarkov/Beethoven) &
 - Pitch estimation.
 
 ## Index
-Pitch:
-
-* [Pitch](#pitch)
-* [Acoustic wave](#acoustic-wave)
-* [Note](#note)
-* [Calculators](#calculators)
-* [FrequencyValidator](#frequencyvalidator)
-* [Error handling](#pitch-error-handling)
+* Pitch:
+  * [Pitch](#pitch)
+  * [Acoustic wave](#acoustic-wave)
+  * [Note](#note)
+  * [Calculators](#calculators)
+  * [FrequencyValidator](#frequencyvalidator)
+  * [Error handling](#pitch-error-handling)
     
-PitchEngine:
-
-* [Pitch engine](#pitch-engine)
-* [Signal tracking](#signal-tracking)
-* [Transform](#transform)
-* [Estimation](#estimation)
-* [Error handling](#pitch-engine-error-handling)
-* [Pitch detection specifics](#pitch-detection-specifics)
+* PitchEngine:
+  * [Pitch engine](#pitch-engine)
+  * [Signal tracking](#signal-tracking)
+  * [Transform](#transform)
+  * [Estimation](#estimation)
+  * [Error handling](#pitch-engine-error-handling)
+  * [Pitch detection specifics](#pitch-detection-specifics)
 
 * [Authors](#authors)
 * [License](#license)
