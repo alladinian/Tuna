@@ -18,6 +18,9 @@ This project is based on [Beethoven](https://github.com/vadymmarkov/Beethoven) &
 - Find a pitch index from a specified frequency or a note letter with octave.
 - Convert a frequency to wavelength and vice versa.
 - Convert a wavelength to time period and vice versa.
+- Audio signal tracking with `AVAudioEngine` and audio nodes.
+- Pre-processing of audio buffer by one of the available "transformers".
+- Pitch estimation.
 
 ## Index
 Pitch:
