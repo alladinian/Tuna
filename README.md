@@ -3,6 +3,7 @@
 ---
 
 **Disclaimer**
+
 This project is based on [Beethoven](https://github.com/vadymmarkov/Beethoven) & [Pitchy](https://github.com/vadymmarkov/Pitchy), two excellent projects by [Vadym Markov](https://github.com/vadymmarkov) that are unfortunatelly not so actively developed any more. The code have been modernized for Swift5, refactored and documented. The heart of the libraries is the same and for anyone that used any of these libraries the transition should be fairly easy.
 
 ---
@@ -37,7 +38,7 @@ do {
   print(pitchOffsets.higher.note.index)   // 1
   print(pitchOffsets.higher.cents)        // -80.4338
 
-  print(pitchOffsets.closest.note.string) // "A4"
+  print(pitchOffsets.closest.note)        // "A4"
 
   // You could also use acoustic wave
   print(pitch.wave.wavelength)            // 0.7795 meters
@@ -77,13 +78,13 @@ do {
   // Note(letter: .C, octave: 4)
   let note = try Note(index: -9)
 
-  print(note.index)                 // -9
-  print(note.letter)                // .C
-  print(note.octave)                // 4
-  print(note.frequency)             // 261.626 Hz
-  print(note.string)                // "C4"
-  print(try note.lower().string)    // "B3"
-  print(try note.higher().string)   // "C#4"
+  print(note.index)				// -9
+  print(note.letter)				// .C
+  print(note.octave)				// 4
+  print(note.frequency)			// 261.626 Hz
+  print(note)						// "C4"
+  print(try note.lower())		// "B3"
+  print(try note.higher())		// "C#4"
 } catch {
   // Handle errors
 }
