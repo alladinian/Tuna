@@ -7,7 +7,6 @@ import UIKit
 
 public protocol PitchEngineDelegate: class {
     func pitchEngine(_ pitchEngine: PitchEngine, didReceive result: Result<Pitch, Error>)
-    func pitchEngineWentBelowLevelThreshold(_ pitchEngine: PitchEngine)
 }
 
 public typealias PitchEngineCallback = (Result<Pitch, Error>) -> Void
@@ -16,7 +15,7 @@ public class PitchEngine {
 
     public enum Error: Swift.Error {
         case recordPermissionDenied
-        case signalBelowThreshold
+        case levelBelowThreshold
     }
 
     public let bufferSize: AVAudioFrameCount
@@ -157,8 +156,8 @@ extension PitchEngine: SignalTrackerDelegate {
 
     public func signalTrackerWentBelowLevelThreshold(_ signalTracker: SignalTracker) {
         DispatchQueue.main.async {
-            self.delegate?.pitchEngineWentBelowLevelThreshold(self)
-            self.callback?(.failure(Error.signalBelowThreshold))
+            self.delegate?.pitchEngine(self, didReceive: .failure(Error.levelBelowThreshold))
+            self.callback?(.failure(Error.levelBelowThreshold))
         }
     }
 
