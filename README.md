@@ -4,7 +4,7 @@
 
 **Disclaimer**
 
-This project is based on [Beethoven](https://github.com/vadymmarkov/Beethoven) & [Pitchy](https://github.com/vadymmarkov/Pitchy), two excellent projects by [Vadym Markov](https://github.com/vadymmarkov) that are unfortunatelly not so actively developed any more. The code have been modernized for Swift5, refactored and documented. I have also removed dependencies and added support for macOS. The heart of the libraries is the same and for anyone that used any of these libraries the transition should be fairly easy.
+This project is based on [Beethoven](https://github.com/vadymmarkov/Beethoven) & [Pitchy](https://github.com/vadymmarkov/Pitchy), two excellent projects by [Vadym Markov](https://github.com/vadymmarkov) that are unfortunatelly not so actively developed any more. The code have been consolidated, modernized for Swift5, refactored and documented. I have also removed dependencies and added support for macOS. The heart of the libraries is the same and for anyone that used any of these libraries the transition should be fairly easy.
 
 ---
 
