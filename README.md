@@ -74,19 +74,19 @@ a pitch index.
 
 ```swift
 do {
-  // Note(frequency: 261.626)
-  // Note(letter: .C, octave: 4)
-  let note = try Note(index: -9)
+    // Note(frequency: 261.626)
+    // Note(letter: .C, octave: 4)
+    let note = try Note(index: -9)
 
-  print(note.index)           // -9
-  print(note.letter)          // .C
-  print(note.octave)          // 4
-  print(note.frequency)       // 261.626 Hz
-  print(note)                 // "C4"
-  print(try note.lower())     // "B3"
-  print(try note.higher())    // "C#4"
+    print(note.index)           // -9
+    print(note.letter)          // .C
+    print(note.octave)          // 4
+    print(note.frequency)       // 261.626 Hz
+    print(note)                 // "C4"
+    print(try note.lower())     // "B3"
+    print(try note.higher())    // "C#4"
 } catch {
-  // Handle errors
+    // Handle errors
 }
 ```
 
@@ -98,7 +98,6 @@ and `Note`, but also are included in the public API.
 
 ```swift
 do {
-
     // PitchCalculator
     let pitchOffsets = try PitchCalculator.offsets(445.0)
     let cents        = try PitchCalculator.cents(frequency1: 440.0, frequency2: 440.0)  // 19.56
@@ -115,11 +114,8 @@ do {
     let wl1          = try WaveCalculator.wavelength(forFrequency: 440.0)               // 0.7795 meters
     let wl2          = try WaveCalculator.wavelength(forPeriod: 0.00227259)             // 0.7795 meters
     let period       = try WaveCalculator.period(forWavelength: 0.7795)                 // 0.00227259 s
-
 } catch {
-
     // Handle errors
-
 }
 ```
 
