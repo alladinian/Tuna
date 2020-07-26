@@ -47,6 +47,7 @@ public class PitchEngine {
     // MARK: - Initialization
 
     public init(bufferSize: AVAudioFrameCount = 4096, estimationStrategy: EstimationStrategy = .yin, audioUrl: URL? = nil, signalTracker: SignalTracker? = nil, delegate: PitchEngineDelegate? = nil, callback: PitchEngineCallback? = nil) {
+
         self.bufferSize = bufferSize
         self.estimator  = estimationStrategy.estimator
 
@@ -59,6 +60,7 @@ public class PitchEngine {
                 self.signalTracker = InputSignalTracker(bufferSize: bufferSize)
             }
         }
+
 
         self.signalTracker.delegate = self
         self.delegate               = delegate
