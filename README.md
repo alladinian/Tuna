@@ -361,7 +361,7 @@ At the moment **Tuna** performs only a pitch detection of a monophonic recording
 > research problem.
 
 ## Authors
-Vasilis Akoinoglou, alladinian@gmail.com
+Vasilis Akoinoglou, alladinian@gmail.com  
 Credit to original Author: Vadym Markov, markov.vadym@gmail.com
 
 ## License
