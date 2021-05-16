@@ -1,4 +1,4 @@
-![Tuna](https://img.imageupload.net/2020/07/25/Tuna-hero.jpg)
+![Tuna hero](https://user-images.githubusercontent.com/156458/118390274-d8663c00-b636-11eb-9088-f2d5eaef287d.jpg)
 
 ---
 
