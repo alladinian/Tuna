@@ -91,7 +91,7 @@ public class PitchEngine {
                 }
             }
 
-        case AVAudioSessionRecordPermission.undetermined:
+        case .undetermined:
             AVAudioSession.sharedInstance().requestRecordPermission { [weak self] granted in
                 guard let self = self else { return }
 
