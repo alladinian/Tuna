@@ -74,7 +74,7 @@ class InputSignalTracker: SignalTracker {
         inputNode.installTap(onBus: bus, bufferSize: bufferSize, format: format) { buffer, time in
             guard let averageLevel = self.averageLevel else { return }
 
-            let levelThreshold = self.levelThreshold ?? -1000000.0
+            let levelThreshold = self.levelThreshold ?? -60.0
 
             DispatchQueue.main.async {
                 if averageLevel > levelThreshold {
